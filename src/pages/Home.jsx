@@ -26,34 +26,34 @@ const YaraLanding = () => {
   const properties = [
     {
       id: 1,
-      title: "Residential Properties",
-      location: "Lagos, Abuja, Port Harcourt",
-      size: "2-5 Bedroom Houses",
+      title: "Luxury Residential Properties",
+      location: "Eko Atlantic, Banana Island, Ikoyi",
+      size: "3-6 Bedroom Villas",
       type: "Real Estate",
-      price: "From ₦25M",
+      price: "From ₦150M",
       image:
-        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
+        "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80",
       features: [
-        "Modern Design",
-        "Gated Estates",
-        "Title Documents",
-        "Flexible Payment",
+        "Waterfront Views",
+        "Smart Home Tech",
+        "Private Security",
+        "Premium Finishes",
       ],
     },
     {
       id: 2,
-      title: "Land & Plots",
-      location: "Lekki, Ibeju, Epe, Ajah",
-      size: "300-1000 SQM",
+      title: "Premium Land & Plots",
+      location: "Victoria Island, Lekki, Abuja",
+      size: "500-2000 SQM",
       type: "Real Estate",
-      price: "From ₦5M",
+      price: "From ₦80M",
       image:
         "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
       features: [
-        "C of O Available",
-        "Strategic Locations",
-        "Infrastructure Ready",
-        "Investment Returns",
+        "Governor's Consent",
+        "Beachfront Options",
+        "Fully Serviced",
+        "High Appreciation",
       ],
     },
     {
@@ -106,18 +106,18 @@ const YaraLanding = () => {
     },
     {
       id: 6,
-      title: "Commercial Properties",
-      location: "VI, Lekki, Ikeja",
-      size: "Shops, Offices, Warehouses",
+      title: "Premium Commercial Spaces",
+      location: "Victoria Island, Ikoyi, Abuja CBD",
+      size: "Offices, Retail, Mixed-Use",
       type: "Real Estate",
       price: "Contact for Price",
       image:
         "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
       features: [
-        "Prime Locations",
-        "High ROI",
-        "Long-term Leases",
-        "Business Districts",
+        "Grade A Buildings",
+        "Premium Tenants",
+        "High Visibility",
+        "Long-term ROI",
       ],
     },
   ];
@@ -303,9 +303,7 @@ const YaraLanding = () => {
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="font-display text-3xl font-bold tracking-wider animate-slide-right">
             <span className="text-gold">YARA</span>
-            <span className="text-white/90 ml-2 text-lg font-light">
-              Farm & Properties
-            </span>
+            <span className="text-white/90 ml-2 text-lg font-light">Group</span>
           </div>
 
           {/* Desktop Menu */}
@@ -387,8 +385,8 @@ const YaraLanding = () => {
           {/* Left Half - Real Estate */}
           <div className="w-1/2 relative">
             <img
-              src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&q=80"
-              alt="Real Estate"
+              src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1920&q=80"
+              alt="Luxury Real Estate"
               className="w-full h-full object-cover animate-fade-in"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#0a0e0f]/80 via-[#0a0e0f]/60 to-[#0a0e0f]/40"></div>
@@ -433,8 +431,9 @@ const YaraLanding = () => {
             Investment Solutions
           </h1>
           <p className="text-lg md:text-xl text-white/80 mb-10 max-w-3xl mx-auto animate-slide-up stagger-2 font-light tracking-wide">
-            Buy land, houses & estates. Own palm plantations, export bulk palm
-            oil, and leverage professional farm management across Africa.
+            Luxury properties in Eko Atlantic, Banana Island, Ikoyi, Victoria
+            Island & Abuja. Premium palm plantations and bulk export across
+            Africa.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up stagger-3">
             <a
@@ -727,12 +726,11 @@ const YaraLanding = () => {
           <div className="grid md:grid-cols-3 gap-12 mb-8">
             <div>
               <div className="font-display text-2xl font-bold mb-4">
-                <span className="text-gold">YARA</span> Farm & Properties
+                <span className="text-gold">YARA</span> Group
               </div>
               <p className="text-white/60 text-sm leading-relaxed">
-                Your trusted partner in real estate and agricultural investments
-                - from residential properties to palm plantations across Nigeria
-                and Africa.
+                Luxury real estate in Nigeria's most prestigious locations and
+                premium agricultural investments across Africa.
               </p>
             </div>
 
@@ -780,7 +778,7 @@ const YaraLanding = () => {
           </div>
 
           <div className="border-t border-white/10 pt-8 text-center text-sm text-white/40">
-            <p>&copy; 2025 YARA Farm & Properties. All rights reserved.</p>
+            <p>&copy; 2025 YARA Group. All rights reserved.</p>
           </div>
         </div>
       </footer>
