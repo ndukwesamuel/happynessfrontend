@@ -14,11 +14,18 @@
 //   Home,
 // } from "lucide-react";
 // import { useNavigate, useParams } from "react-router-dom";
+// import { useMutateData } from "../hook/Request";
+// // import { useMutateData } from "../../hook/Request";
 
 // const PropertyDetailsPage = () => {
 //   const navigate = useNavigate();
 //   const { id } = useParams(); // Get property ID from URL
 //   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+//   // Consultation mutation
+//   const { mutate: submitConsultation, isLoading: isSubmitting } =
+//     useMutateData("consultations");
+
 //   const [formData, setFormData] = useState({
 //     fullName: "",
 //     email: "",
@@ -69,22 +76,59 @@
 
 //   const handleSubmit = (e) => {
 //     e.preventDefault();
-//     const consultationData = {
-//       ...formData,
-//       propertyInterest: property.title,
-//       propertyId: property.id,
+
+//     // Get propertyType from property.type
+//     const propertyTypeMap = {
+//       Residential: "residential-property",
+//       "Land & Plots": "land-plots",
+//       Commercial: "commercial-property",
+//       "Palm Plantation": "plantation-ownership",
+//       "Farm Management": "farm-management",
+//       "Bulk Export": "bulk-palm-oil",
 //     };
-//     console.log("Consultation Request:", consultationData);
-//     alert(
-//       "Thank you! Your consultation request has been submitted. We will contact you within 24-48 hours.",
+
+//     const consultationData = {
+//       fullName: formData.fullName,
+//       email: formData.email,
+//       phone: formData.phone,
+//       propertyInterest: property.title,
+//       propertyType: propertyTypeMap[property.type] || "residential-property",
+//       propertyId: property.id.toString(),
+//       preferredDate: formData.preferredDate || undefined,
+//       message: formData.message || undefined,
+//     };
+
+//     // Submit to API
+//     submitConsultation(
+//       {
+//         url: "/consultation",
+//         data: consultationData,
+//       },
+//       {
+//         onSuccess: (response) => {
+//           console.log("Success:", response);
+//           alert(
+//             "Thank you! Your consultation request has been submitted successfully. We will contact you within 24-48 hours.",
+//           );
+
+//           // Reset form
+//           setFormData({
+//             fullName: "",
+//             email: "",
+//             phone: "",
+//             preferredDate: "",
+//             message: "",
+//           });
+//         },
+//         onError: (error) => {
+//           console.error("Error:", error);
+//           alert(
+//             error?.message ||
+//               "Failed to submit consultation request. Please try again.",
+//           );
+//         },
+//       },
 //     );
-//     setFormData({
-//       fullName: "",
-//       email: "",
-//       phone: "",
-//       preferredDate: "",
-//       message: "",
-//     });
 //   };
 
 //   return (
@@ -489,9 +533,10 @@
 
 //                   <button
 //                     type="submit"
-//                     className="w-full bg-gradient-gold py-4 font-semibold tracking-wide hover:shadow-xl hover:shadow-[#b7945e]/30 transition-all rounded-lg"
+//                     disabled={isSubmitting}
+//                     className={`w-full bg-gradient-gold py-4 font-semibold tracking-wide hover:shadow-xl hover:shadow-[#b7945e]/30 transition-all rounded-lg ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""}`}
 //                   >
-//                     SUBMIT REQUEST
+//                     {isSubmitting ? "SUBMITTING..." : "SUBMIT REQUEST"}
 //                   </button>
 
 //                   <p className="text-xs text-white/40 text-center">
@@ -577,13 +622,18 @@ import {
   Home,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutateData } from "../hook/Request";
-// import { useMutateData } from "../../hook/Request";
+import { useMutateData, useFetchData } from "../hook/Request";
 
 const PropertyDetailsPage = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // Get property ID from URL
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Fetch property details from API
+  const { data: propertyData, isLoading: loadingProperty } = useFetchData(
+    `/property/${id}`,
+    `property-${id}`,
+  );
 
   // Consultation mutation
   const { mutate: submitConsultation, isLoading: isSubmitting } =
@@ -597,28 +647,70 @@ const PropertyDetailsPage = () => {
     message: "",
   });
 
-  // Mock data - In real app, fetch based on ID from backend
-  const property = {
-    id: 1,
-    title: "Luxury Villa - Eko Atlantic",
-    location: "Eko Atlantic, Lagos",
-    size: "5 Bedroom Duplex",
-    type: "Residential",
-    category: "Real Estate",
-    price: "₦250M",
-    status: "active",
-    image:
-      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80",
-    features: ["Waterfront", "Smart Home", "Pool", "Gym"],
-    description:
-      "This exceptional residential property represents a unique investment opportunity in Eko Atlantic. Featuring modern architecture and premium finishes, this property is situated in one of Nigeria's most prestigious locations. With easy access to major business districts, luxury amenities, and world-class infrastructure, this is an ideal choice for discerning investors and homeowners alike.",
-    images: [
+  // Default images by type
+  const defaultImages = {
+    Residential: [
       "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80",
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80",
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80",
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80",
     ],
+    Commercial: [
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80",
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80",
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80",
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80",
+    ],
+    "Palm Plantation": [
+      "https://images.unsplash.com/photo-1566281796817-93bc94d7dbd2?w=1200&q=80",
+      "https://images.unsplash.com/photo-1566281796817-93bc94d7dbd2?w=1200&q=80",
+      "https://images.unsplash.com/photo-1566281796817-93bc94d7dbd2?w=1200&q=80",
+      "https://images.unsplash.com/photo-1566281796817-93bc94d7dbd2?w=1200&q=80",
+    ],
   };
+
+  // Get property from API or fallback to mock
+  const apiProperty = propertyData?.data?.property;
+  const property = apiProperty
+    ? {
+        id: apiProperty._id,
+        title: apiProperty.title,
+        location: apiProperty.location,
+        size: apiProperty.size,
+        type: apiProperty.type,
+        category: apiProperty.category,
+        price: apiProperty.price,
+        status: apiProperty.status,
+        image:
+          defaultImages[apiProperty.type]?.[0] ||
+          "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80",
+        features: apiProperty.features || [],
+        description:
+          apiProperty.description ||
+          "This exceptional residential property represents a unique investment opportunity in Eko Atlantic. Featuring modern architecture and premium finishes, this property is situated in one of Nigeria's most prestigious locations. With easy access to major business districts, luxury amenities, and world-class infrastructure, this is an ideal choice for discerning investors and homeowners alike.",
+        images: defaultImages[apiProperty.type] || defaultImages["Residential"],
+      }
+    : {
+        id: 1,
+        title: "Luxury Villa - Eko Atlantic",
+        location: "Eko Atlantic, Lagos",
+        size: "5 Bedroom Duplex",
+        type: "Residential",
+        category: "Real Estate",
+        price: "₦250M",
+        status: "active",
+        image:
+          "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80",
+        features: ["Waterfront", "Smart Home", "Pool", "Gym"],
+        description:
+          "This exceptional residential property represents a unique investment opportunity in Eko Atlantic. Featuring modern architecture and premium finishes, this property is situated in one of Nigeria's most prestigious locations. With easy access to major business districts, luxury amenities, and world-class infrastructure, this is an ideal choice for discerning investors and homeowners alike.",
+        images: [
+          "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80",
+          "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80",
+          "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80",
+          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80",
+        ],
+      };
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % property.images.length);
@@ -664,7 +756,7 @@ const PropertyDetailsPage = () => {
     // Submit to API
     submitConsultation(
       {
-        url: "/consultation",
+        url: "/api/v1/consultations",
         data: consultationData,
       },
       {
