@@ -18,7 +18,7 @@ export default function SidebarContent({
           isMobile ? "px-4 pt-4" : "px-4 pt-2"
         }`}
       >
-        <img src={assets.logo} alt="App Logo" className="h-10 w-40" />
+        <p>YARA Group </p>
       </div>
 
       {/* Navigation Links */}

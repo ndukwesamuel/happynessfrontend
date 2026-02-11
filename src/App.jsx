@@ -57,59 +57,59 @@ const router = createBrowserRouter([
   //   errorElement: <ErrorPage />,
   // },
 
-  // {
-  //   element: <RouteGuard />,
-  //   errorElement: <ErrorPage />,
-  //   children: [
-  //     {
-  //       element: <RootLayout />,
-  //       children: [
-  //         { path: "/dashboard", element: <Dashboard /> },
-  //         { path: "/contacts", element: <Contacts /> },
-  //         { path: "/contacts/bulk", element: <BulkUploadContacts /> },
-  //         { path: "/compose", element: <MessageComposer /> },
-  //         // { path: "/campaigns", element: <Campaigns /> },
+  {
+    element: <RouteGuard />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        element: <RootLayout />,
+        children: [
+          { path: "/dashboard", element: <Dashboard /> },
+          // { path: "/contacts", element: <Contacts /> },
+          // { path: "/contacts/bulk", element: <BulkUploadContacts /> },
+          // { path: "/compose", element: <MessageComposer /> },
+          // { path: "/campaigns", element: <Campaigns /> },
 
-  //         {
-  //           path: "campaigns",
-  //           children: [
-  //             { index: true, element: <Campaigns /> },
-  //             { path: ":id", element: <CampaignDetails /> },
-  //           ],
-  //         },
+          // {
+          //   path: "campaigns",
+          //   children: [
+          //     { index: true, element: <Campaigns /> },
+          //     { path: ":id", element: <CampaignDetails /> },
+          //   ],
+          // },
 
-  //         {
-  //           path: "templates",
-  //           children: [
-  //             { index: true, element: <TemplateManager /> },
-  //             { path: "create", element: <CreateTemplate /> },
-  //             { path: ":templateId", element: <EditTemplate /> },
-  //           ],
-  //         },
+          // {
+          //   path: "templates",
+          //   children: [
+          //     { index: true, element: <TemplateManager /> },
+          //     { path: "create", element: <CreateTemplate /> },
+          //     { path: ":templateId", element: <EditTemplate /> },
+          //   ],
+          // },
 
-  //         // Events Routes (Protected - Admin Only)
-  //         {
-  //           path: "events",
-  //           children: [
-  //             { index: true, element: <EventsList /> },
-  //             { path: "create", element: <CreateEvent /> },
-  //             { path: ":eventId", element: <EventDashboard /> },
-  //             { path: ":eventId/edit", element: <EditEvent /> },
-  //             {
-  //               path: ":eventId/registrations",
-  //               element: <RegistrationsList />,
-  //             },
-  //           ],
-  //         },
-  //         { path: "/files", element: <FileManager /> },
-  //         { path: "/settings", element: <SettingsPage /> },
-  //         { path: "/birthday", element: <BirthdayDashboard /> },
-  //         { path: "/field-officers", element: <FieldOfficers /> },
-  //         { path: "*", element: <ErrorPage /> },
-  //       ],
-  //     },
-  //   ],
-  // },
+          // // Events Routes (Protected - Admin Only)
+          // {
+          //   path: "events",
+          //   children: [
+          //     { index: true, element: <EventsList /> },
+          //     { path: "create", element: <CreateEvent /> },
+          //     { path: ":eventId", element: <EventDashboard /> },
+          //     { path: ":eventId/edit", element: <EditEvent /> },
+          //     {
+          //       path: ":eventId/registrations",
+          //       element: <RegistrationsList />,
+          //     },
+          //   ],
+          // },
+          // { path: "/files", element: <FileManager /> },
+          // { path: "/settings", element: <SettingsPage /> },
+          // { path: "/birthday", element: <BirthdayDashboard /> },
+          // { path: "/field-officers", element: <FieldOfficers /> },
+          // { path: "*", element: <ErrorPage /> },
+        ],
+      },
+    ],
+  },
   { path: "*", element: <ErrorPage /> },
 ]);
 

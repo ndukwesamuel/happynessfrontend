@@ -15,47 +15,47 @@ export const tabs = [
     label: "Dashboard",
     icon: Home,
   },
-  {
-    path: "/contacts",
-    label: "Contacts",
-    icon: Users,
-  },
-  {
-    path: "/compose",
-    label: "Compose",
-    icon: PenTool,
-  },
-  {
-    path: "/campaigns",
-    label: "Campaigns",
-    icon: Megaphone,
-  },
-  {
-    path: "/templates",
-    label: "Templates",
-    icon: FileText,
-  },
-  {
-    path: "/files",
-    label: "Files",
-    icon: FolderOpen,
-  },
+  // {
+  //   path: "/contacts",
+  //   label: "Contacts",
+  //   icon: Users,
+  // },
+  // {
+  //   path: "/compose",
+  //   label: "Compose",
+  //   icon: PenTool,
+  // },
+  // {
+  //   path: "/campaigns",
+  //   label: "Campaigns",
+  //   icon: Megaphone,
+  // },
+  // {
+  //   path: "/templates",
+  //   label: "Templates",
+  //   icon: FileText,
+  // },
+  // {
+  //   path: "/files",
+  //   label: "Files",
+  //   icon: FolderOpen,
+  // },
 
-  {
-    path: "/birthday",
-    label: "Birthday",
-    icon: UtensilsCrossed,
-  },
+  // {
+  //   path: "/birthday",
+  //   label: "Birthday",
+  //   icon: UtensilsCrossed,
+  // },
 
-  {
-    path: "/settings",
-    label: "Settings",
-    icon: Settings,
-  },
+  // {
+  //   path: "/settings",
+  //   label: "Settings",
+  //   icon: Settings,
+  // },
 
-  {
-    path: "/events",
-    label: "Events",
-    icon: Settings,
-  },
+  // {
+  //   path: "/events",
+  //   label: "Events",
+  //   icon: Settings,
+  // },
 ];
