@@ -13,6 +13,7 @@ import EventDashboard from "./pages/Event/EventDashboard";
 import EditEvent from "./pages/Event/EditEvent";
 import RegistrationsList from "./pages/Event/RegistrationsList";
 import Home from "./pages/Home";
+import PropertyDetailsPage from "./pages/Propertydetailspage";
 
 const Login = lazy(() => import("./pages/auth/Login"));
 const MainSignUp = lazy(() => import("./pages/auth/MainSignUp"));
@@ -37,6 +38,11 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/property/:id",
+    element: <PropertyDetailsPage />,
     errorElement: <ErrorPage />,
   },
   // {
@@ -65,7 +71,7 @@ const router = createBrowserRouter([
         element: <RootLayout />,
         children: [
           { path: "/dashboard", element: <Dashboard /> },
-          // { path: "/contacts", element: <Contacts /> },
+          // { path: "/property/:id", element: <Contacts /> },
           // { path: "/contacts/bulk", element: <BulkUploadContacts /> },
           // { path: "/compose", element: <MessageComposer /> },
           // { path: "/campaigns", element: <Campaigns /> },
