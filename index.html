@@ -1100,9 +1100,10 @@
     <!-- JAVASCRIPT -->
     <script>
       // ── API BASE URL ──
-      const API_BASE = "https://happynessbackend.onrender.com";
+      const API_BASE = "http://localhost:8000/"; //"https://happynessbackend.onrender.com";
 
       // ── THANK YOU PAGE URL ──
+      // const THANK_YOU_URL = "/thankyou.html";
       const THANK_YOU_URL = "./thankyou.html";
 
       // ── PHASES DATA ──
@@ -1251,7 +1252,7 @@
         btn.disabled = true;
 
         try {
-          var res = await fetch(API_BASE + "/consultation", {
+          var res = await fetch(API_BASE + "consultation", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1299,7 +1300,7 @@
         btn.disabled = true;
 
         try {
-          var res = await fetch(API_BASE + "/inspection", {
+          var res = await fetch(API_BASE + "inspection", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
