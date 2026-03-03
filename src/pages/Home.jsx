@@ -804,11 +804,11 @@ const YaraHome = () => {
                 </p>
                 <p>
                   Known for her transparency, patience, and hands-on support,
-                  Happiness Happiness simplifies the investment journey from
-                  property discovery to documentation and after sales guidance.
-                  Her goal is not just to sell land, but to empower clients with
-                  assets that appreciate, generate consistent returns, and
-                  contribute to generational prosperity.
+                  Happiness simplifies the investment journey from property
+                  discovery to documentation and after sales guidance. Her goal
+                  is not just to sell land, but to empower clients with assets
+                  that appreciate, generate consistent returns, and contribute
+                  to generational prosperity.
                 </p>
                 <p>
                   Driven by integrity and a passion for agriculture, she has
@@ -818,9 +818,8 @@ const YaraHome = () => {
                 </p>
 
                 <p>
-                  With Happiness Happiness, clients don’t just acquire land they
-                  secure a future built on value, growth, and long-term
-                  opportunity.
+                  With Happiness, clients don’t just acquire land they secure a
+                  future built on value, growth, and long-term opportunity.
                 </p>
               </div>
             </div>
