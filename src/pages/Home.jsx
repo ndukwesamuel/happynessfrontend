@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useMutateData, useFetchData } from "../hook/Request";
 
+import videoFile from "../assets/happy.mp4";
+
 import consultantImg from "../assets/happy.jpeg";
 
 /* ─────────────────────────────────────────────
@@ -785,28 +787,28 @@ const YaraHome = () => {
             </div>
             <div>
               <span className="section-tag">Meet the Expert</span>
-              <h2 className="agent-title">Mrs Medinat Olayiwola</h2>
+              <h2 className="agent-title">Happiness warribo</h2>
               <p className="agent-role">
                 Professional Agro Real Estate Consultant
               </p>
               <div className="divider" />
               <div className="agent-body">
                 <p>
-                  Mrs. Medinat is a dedicated agro real estate consultant
-                  committed to helping individuals and families build lasting
-                  wealth through strategic agricultural investments. With a
-                  strong understanding of both farmland value and long term
+                  Happiness is a dedicated agro real estate consultant committed
+                  to helping individuals and families build lasting wealth
+                  through strategic agricultural investments. With a strong
+                  understanding of both farmland value and long term
                   agribusiness potential, she guides clients toward
                   opportunities that offer stability, passive income, and
                   sustainable growth.
                 </p>
                 <p>
                   Known for her transparency, patience, and hands-on support,
-                  Mrs. Medinat simplifies the investment journey from property
-                  discovery to documentation and after sales guidance. Her goal
-                  is not just to sell land, but to empower clients with assets
-                  that appreciate, generate consistent returns, and contribute
-                  to generational prosperity.
+                  Happiness Happiness simplifies the investment journey from
+                  property discovery to documentation and after sales guidance.
+                  Her goal is not just to sell land, but to empower clients with
+                  assets that appreciate, generate consistent returns, and
+                  contribute to generational prosperity.
                 </p>
                 <p>
                   Driven by integrity and a passion for agriculture, she has
@@ -816,8 +818,9 @@ const YaraHome = () => {
                 </p>
 
                 <p>
-                  With Mrs. Medinat, clients don’t just acquire land they secure
-                  a future built on value, growth, and long-term opportunity.
+                  With Happiness Happiness, clients don’t just acquire land they
+                  secure a future built on value, growth, and long-term
+                  opportunity.
                 </p>
               </div>
             </div>
@@ -1054,6 +1057,10 @@ const YaraHome = () => {
               </div>
             </div>
             <div className="story-video">
+              <video width="600" controls>
+                <source src={videoFile} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
               {/* <iframe
                 src="https://youtu.be/1L1vQFasVF0?si=lOHXrzVeQ0_DTN1t" //"https://www.youtube.com/embed/dQw4w9WgXcQ"
                 title="YARA Group Story"
@@ -1061,7 +1068,7 @@ const YaraHome = () => {
                 allowFullScreen
               /> */}
 
-              <iframe
+              {/* <iframe
                 width="560"
                 height="315"
                 src="https://www.youtube-nocookie.com/embed/1L1vQFasVF0?si=lOHXrzVeQ0_DTN1t"
@@ -1070,7 +1077,7 @@ const YaraHome = () => {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerpolicy="strict-origin-when-cross-origin"
                 allowfullscreen
-              ></iframe>
+              ></iframe> */}
             </div>
           </div>
         </div>
@@ -1105,7 +1112,12 @@ const YaraHome = () => {
               allowFullScreen
             /> */}
 
-            <iframe
+            <video width="800" controls>
+              <source src={videoFile} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+
+            {/* <iframe
               width="560"
               height="315"
               src="https://www.youtube.com/embed/J7Idf9gMtyg?si=3U38svxuUJ-FJvlu"
@@ -1114,7 +1126,7 @@ const YaraHome = () => {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerpolicy="strict-origin-when-cross-origin"
               allowfullscreen
-            ></iframe>
+            ></iframe> */}
           </div>
         </div>
       </section>
