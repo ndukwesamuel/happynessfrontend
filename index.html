@@ -1,13 +1,1331 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Church Event</title>
+    <title>YARA Group — Oil Palm Plantation Investment</title>
+    <meta
+      name="description"
+      content="Build sustainable income with oil palm plantations. Nigeria's most reliable agricultural investment."
+    />
+
+    <!-- Meta Pixel Code -->
+    <script>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js",
+      );
+      fbq("init", "1399633278144430");
+      fbq("track", "PageView");
+    </script>
+    <!-- End Meta Pixel Code -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              cream: "#f5f0e8",
+              "cream-dark": "#ede6d6",
+              forest: "#1a2e1a",
+              "forest-mid": "#2d4a2d",
+              "forest-light": "#3d5c3d",
+              gold: "#c49a3c",
+              "gold-light": "#e0b84a",
+              "text-dark": "#1a1a1a",
+              "text-mid": "#4a4a4a",
+              "text-light": "#7a7a7a",
+            },
+            fontFamily: {
+              display: ['"Playfair Display"', "serif"],
+              body: ['"DM Sans"', "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        font-family: "DM Sans", sans-serif;
+      }
+
+      .yara-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        transition: all 0.4s ease;
+        padding: 1.5rem 0;
+      }
+      .yara-nav.scrolled {
+        background: rgba(245, 240, 232, 0.97);
+        backdrop-filter: blur(12px);
+        padding: 1rem 0;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+        border-bottom: 1px solid rgba(196, 154, 60, 0.2);
+      }
+
+      .hero {
+        min-height: 100vh;
+        background-image: url("https://images.pexels.com/photos/30251970/pexels-photo-30251970.jpeg?auto=compress&cs=tinysrgb&w=1920");
+        background-size: cover;
+        background-position: center 40%;
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 8rem;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(10, 20, 10, 0.2) 0%,
+          rgba(10, 20, 10, 0.1) 30%,
+          rgba(10, 20, 10, 0.6) 70%,
+          rgba(10, 20, 10, 0.85) 100%
+        );
+      }
+
+      .btn-primary {
+        background: #c49a3c;
+        color: #1a2e1a;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 1rem 2.2rem;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+        display: inline-block;
+        font-family: "DM Sans", sans-serif;
+      }
+      .btn-primary:hover {
+        background: #e0b84a;
+        transform: translateY(-2px);
+      }
+      .btn-outline {
+        background: transparent;
+        color: #fff;
+        font-weight: 500;
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 1rem 2.2rem;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+        display: inline-block;
+      }
+      .btn-outline:hover {
+        border-color: #e0b84a;
+        background: rgba(196, 154, 60, 0.15);
+      }
+
+      .phase-card {
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+      .phase-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      }
+      .phase-img {
+        transition: transform 0.5s;
+      }
+      .phase-card:hover .phase-img {
+        transform: scale(1.05);
+      }
+
+      .sold-out-stamp {
+        border: 3px solid rgba(255, 255, 255, 0.85);
+        transform: rotate(-8deg);
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      }
+
+      .cta-banner {
+        background-image: url("https://images.pexels.com/photos/2950868/pexels-photo-2950868.jpeg?auto=compress&cs=tinysrgb&w=1920");
+        background-size: cover;
+        background-position: center;
+        position: relative;
+      }
+      .cta-banner::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(10, 20, 10, 0.72);
+      }
+
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        background: rgba(0, 0, 0, 0.65);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        animation: fadeIn 0.3s ease;
+      }
+      .modal-box {
+        animation: slideUp 0.35s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(30px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-input {
+        padding: 0.85rem 1rem;
+        border: 1px solid #ddd;
+        width: 100%;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.9rem;
+        color: #1a1a1a;
+        outline: none;
+        transition: border-color 0.2s;
+        background: #f5f0e8;
+      }
+      .modal-input:focus {
+        border-color: #c49a3c;
+      }
+      .modal-btn {
+        background: #1a2e1a;
+        color: #f5f0e8;
+        border: none;
+        width: 100%;
+        padding: 1rem;
+        font-family: "DM Sans", sans-serif;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-top: 0.25rem;
+      }
+      .modal-btn:hover {
+        background: #3d5c3d;
+      }
+      .modal-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      .mobile-nav-overlay {
+        position: fixed;
+        inset: 0;
+        background: #f5f0e8;
+        z-index: 99;
+        padding: 6rem 2rem 2rem;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      }
+      .mobile-nav-overlay.open {
+        transform: translateX(0);
+      }
+
+      .agent-img-frame {
+        position: absolute;
+        bottom: -1.5rem;
+        right: -1.5rem;
+        width: calc(100% - 2rem);
+        height: calc(100% - 2rem);
+        border: 2px solid #c49a3c;
+        z-index: -1;
+      }
+
+      @media (max-width: 768px) {
+        .desktop-nav {
+          display: none !important;
+        }
+        .hamburger {
+          display: flex !important;
+        }
+        .agent-img-frame {
+          display: none;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+        .steps-grid {
+          grid-template-columns: 1fr !important;
+        }
+        .step-arrow {
+          display: none !important;
+        }
+      }
+      @media (min-width: 769px) {
+        .hamburger {
+          display: none !important;
+        }
+        .mobile-nav-overlay {
+          display: none !important;
+        }
+      }
+    </style>
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+  <body class="bg-cream text-text-dark">
+    <noscript>
+      <img
+        height="1"
+        width="1"
+        style="display: none"
+        src="https://www.facebook.com/tr?id=1399633278144430&ev=PageView&noscript=1"
+      />
+    </noscript>
+
+    <!-- WEBINAR MODAL -->
+    <div id="webinarModal" class="modal-overlay" style="display: none">
+      <div class="modal-box bg-white w-full max-w-lg p-10 relative">
+        <button
+          onclick="closeWebinar()"
+          class="absolute top-4 right-4 bg-transparent border-none cursor-pointer text-2xl text-text-light leading-none"
+        >
+          &times;
+        </button>
+        <div class="mb-6">
+          <div class="font-display text-xl font-bold text-forest">
+            <span class="text-gold">YARA</span> Group
+          </div>
+        </div>
+        <h3 class="font-display text-xl font-bold text-text-dark mb-2">
+          Free Webinar: Own a Profitable Plantation
+        </h3>
+        <p class="text-sm text-text-mid mb-7 leading-relaxed">
+          Join our free webinar and learn the proven system for owning a
+          profitable oil palm plantation that generates passive income for
+          decades.
+        </p>
+        <div class="flex flex-col gap-3">
+          <input
+            id="webEmail"
+            class="modal-input"
+            placeholder="Enter your email address"
+            type="email"
+            required
+          />
+          <input
+            id="webPhone"
+            class="modal-input"
+            placeholder="Phone Number"
+            type="tel"
+            required
+          />
+          <input
+            id="webName"
+            class="modal-input"
+            placeholder="Your Name"
+            type="text"
+            required
+          />
+          <input
+            id="webAvailable"
+            class="modal-input"
+            placeholder="Would you be available for the webinar?"
+          />
+          <button id="webSubmitBtn" class="modal-btn" onclick="submitWebinar()">
+            Sign Up
+          </button>
+        </div>
+        <p
+          class="text-center text-xs text-text-light mt-3 cursor-pointer hover:underline"
+          onclick="closeWebinar()"
+        >
+          Thanks, I'm not interested
+        </p>
+      </div>
+    </div>
+
+    <!-- INSPECTION MODAL -->
+    <div id="inspectionModal" class="modal-overlay" style="display: none">
+      <div class="modal-box bg-white w-full max-w-lg p-10 relative">
+        <button
+          onclick="closeInspection()"
+          class="absolute top-4 right-4 bg-transparent border-none cursor-pointer text-2xl text-text-light leading-none"
+        >
+          &times;
+        </button>
+        <div class="mb-6">
+          <div class="font-display text-xl font-bold text-forest">
+            <span class="text-gold">YARA</span> Group
+          </div>
+        </div>
+        <h3 class="font-display text-xl font-bold text-text-dark mb-2">
+          Book a Site Inspection
+        </h3>
+        <p class="text-sm text-text-mid mb-7 leading-relaxed">
+          See the land for yourself. Our team will walk you through the
+          plantation and answer every question you have.
+        </p>
+        <div class="flex flex-col gap-3">
+          <input
+            id="insEmail"
+            class="modal-input"
+            placeholder="Enter your email address"
+            type="email"
+            required
+          />
+          <input
+            id="insName"
+            class="modal-input"
+            placeholder="Your Name"
+            type="text"
+            required
+          />
+          <input
+            id="insPhone"
+            class="modal-input"
+            placeholder="Phone Number"
+            type="tel"
+            required
+          />
+          <input
+            id="insSource"
+            class="modal-input"
+            placeholder="How did you hear about us?"
+          />
+          <button
+            id="insSubmitBtn"
+            class="modal-btn"
+            onclick="submitInspection()"
+          >
+            Book Inspection
+          </button>
+        </div>
+        <p
+          class="text-center text-xs text-text-light mt-3 cursor-pointer hover:underline"
+          onclick="closeInspection()"
+        >
+          Thanks, I'm not interested
+        </p>
+      </div>
+    </div>
+
+    <!-- NAV -->
+    <nav id="mainNav" class="yara-nav">
+      <div
+        class="max-w-screen-xl mx-auto px-8 flex items-center justify-between"
+      >
+        <a
+          href="#"
+          class="font-display text-2xl font-bold text-forest no-underline"
+          ><span class="text-gold">YARA</span> Group</a
+        >
+        <div class="desktop-nav flex items-center gap-10">
+          <a
+            href="#why"
+            class="text-xs font-medium tracking-widest uppercase text-text-dark no-underline hover:text-gold transition-colors"
+            >Why Invest</a
+          >
+          <a
+            href="#estates"
+            class="text-xs font-medium tracking-widest uppercase text-text-dark no-underline hover:text-gold transition-colors"
+            >Estates</a
+          >
+          <a
+            href="#story"
+            class="text-xs font-medium tracking-widest uppercase text-text-dark no-underline hover:text-gold transition-colors"
+            >Our Story</a
+          >
+          <a
+            href="#contact"
+            class="text-xs font-medium tracking-widest uppercase text-text-dark no-underline hover:text-gold transition-colors"
+            >Contact</a
+          >
+          <button
+            onclick="openInspection()"
+            class="text-xs font-medium tracking-widest uppercase bg-forest text-cream px-6 py-2.5 border-none cursor-pointer hover:bg-forest-light transition-colors"
+          >
+            Book Inspection
+          </button>
+        </div>
+        <button
+          class="hamburger flex-col gap-1.5 p-1 bg-transparent border-none cursor-pointer"
+          onclick="toggleMenu()"
+          aria-label="Menu"
+        >
+          <span class="block w-6 h-0.5 bg-text-dark"></span>
+          <span class="block w-6 h-0.5 bg-text-dark"></span>
+          <span class="block w-6 h-0.5 bg-text-dark"></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- MOBILE NAV -->
+    <div id="mobileNav" class="mobile-nav-overlay">
+      <div class="flex flex-col gap-6">
+        <a
+          href="#why"
+          class="text-2xl font-display text-text-dark no-underline"
+          onclick="closeMenu()"
+          >Why Invest</a
+        >
+        <a
+          href="#estates"
+          class="text-2xl font-display text-text-dark no-underline"
+          onclick="closeMenu()"
+          >Estates</a
+        >
+        <a
+          href="#story"
+          class="text-2xl font-display text-text-dark no-underline"
+          onclick="closeMenu()"
+          >Our Story</a
+        >
+        <a
+          href="#contact"
+          class="text-2xl font-display text-text-dark no-underline"
+          onclick="closeMenu()"
+          >Contact</a
+        >
+        <button
+          class="btn-primary"
+          onclick="
+            closeMenu();
+            openInspection();
+          "
+        >
+          Book Inspection
+        </button>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="relative z-10 max-w-screen-xl mx-auto px-8">
+        <span
+          class="text-xs font-medium tracking-[0.2em] uppercase text-gold-light mb-4 block"
+          >YARA Group &middot; Agriculture Division</span
+        >
+        <h1
+          class="font-display text-5xl md:text-7xl font-bold text-white leading-tight mb-6 max-w-2xl"
+        >
+          Build sustainable income with
+          <em class="italic text-gold-light">oil palm</em> plantations
+        </h1>
+        <p
+          class="text-lg text-white/80 max-w-xl leading-relaxed mb-10 font-light"
+        >
+          Nigeria's most reliable agricultural investment. Oil palm produces
+          harvests every single year for 25+ years &mdash; delivering consistent
+          passive income, land appreciation, and a legacy that outlasts you.
+        </p>
+        <div class="flex gap-4 flex-wrap">
+          <button class="btn-primary" onclick="openInspection()">
+            Book Inspection
+          </button>
+          <a href="#estates" class="btn-outline">Explore Estates</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS STRIP -->
+    <section class="bg-forest-mid py-10">
+      <div class="max-w-screen-xl mx-auto px-8">
+        <div class="stats-grid grid grid-cols-4 gap-4 text-center">
+          <div
+            class="px-4"
+            style="border-right: 1px solid rgba(245, 240, 232, 0.1)"
+          >
+            <div
+              class="font-display text-3xl md:text-4xl font-bold text-gold-light mb-1"
+            >
+              25+
+            </div>
+            <div class="text-xs text-cream/60 tracking-wider uppercase">
+              Years of Annual Harvest
+            </div>
+          </div>
+          <div
+            class="px-4"
+            style="border-right: 1px solid rgba(245, 240, 232, 0.1)"
+          >
+            <div
+              class="font-display text-3xl md:text-4xl font-bold text-gold-light mb-1"
+            >
+              &#8358;180B+
+            </div>
+            <div class="text-xs text-cream/60 tracking-wider uppercase">
+              Palm Oil Market Value in Nigeria
+            </div>
+          </div>
+          <div
+            class="px-4"
+            style="border-right: 1px solid rgba(245, 240, 232, 0.1)"
+          >
+            <div
+              class="font-display text-3xl md:text-4xl font-bold text-gold-light mb-1"
+            >
+              3&times;
+            </div>
+            <div class="text-xs text-cream/60 tracking-wider uppercase">
+              Faster Growth Than Inflation
+            </div>
+          </div>
+          <div class="px-4">
+            <div
+              class="font-display text-3xl md:text-4xl font-bold text-gold-light mb-1"
+            >
+              6 Phases
+            </div>
+            <div class="text-xs text-cream/60 tracking-wider uppercase">
+              Of Palmrich &mdash; 4 Already Sold Out
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY INVEST -->
+    <section class="py-24 bg-forest" id="why">
+      <div class="max-w-screen-xl mx-auto px-8">
+        <span
+          class="text-xs font-semibold tracking-[0.2em] uppercase text-gold-light mb-3 block"
+          >Why Oil Palm?</span
+        >
+        <h2
+          class="font-display text-4xl md:text-5xl font-bold text-cream leading-tight"
+        >
+          A crop that works for you,<br /><em class="italic text-gold-light"
+            >year after year</em
+          >
+        </h2>
+        <div class="w-16 h-1 bg-gold-light my-6"></div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16">
+          <div>
+            <div
+              class="font-display text-6xl font-black text-gold/25 leading-none mb-4"
+            >
+              01
+            </div>
+            <div class="w-10 h-0.5 bg-gold mb-4"></div>
+            <div class="font-display text-lg font-semibold text-cream mb-3">
+              Strong and Predictable Cash Flow
+            </div>
+            <div class="text-sm text-cream/60 leading-relaxed">
+              Oil palm produces harvests every year for decades, creating a
+              dependable revenue stream that strengthens long-term financial
+              planning.
+            </div>
+          </div>
+          <div>
+            <div
+              class="font-display text-6xl font-black text-gold/25 leading-none mb-4"
+            >
+              02
+            </div>
+            <div class="w-10 h-0.5 bg-gold mb-4"></div>
+            <div class="font-display text-lg font-semibold text-cream mb-3">
+              High-Demand Commodity With Global Market Stability
+            </div>
+            <div class="text-sm text-cream/60 leading-relaxed">
+              As a versatile product used across food, cosmetics, and energy
+              industries, oil palm maintains steady international demand,
+              reducing volatility and supporting sustainable price growth.
+            </div>
+          </div>
+          <div>
+            <div
+              class="font-display text-6xl font-black text-gold/25 leading-none mb-4"
+            >
+              03
+            </div>
+            <div class="w-10 h-0.5 bg-gold mb-4"></div>
+            <div class="font-display text-lg font-semibold text-cream mb-3">
+              Inflation-Resistant Agricultural Asset
+            </div>
+            <div class="text-sm text-cream/60 leading-relaxed">
+              Because its value is tied to essential consumer markets, oil palm
+              consistently outperforms inflation over time, helping investors
+              protect and grow their capital efficiently.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AGENT -->
+    <section class="py-24 bg-cream-dark">
+      <div class="max-w-screen-xl mx-auto px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+          <div class="relative">
+            <img
+              src="./happy.jpeg"
+              alt="Happiness Warribo - Consultant"
+              class="w-full object-cover object-top"
+              style="aspect-ratio: 4/5; filter: grayscale(10%)"
+            />
+            <div class="agent-img-frame"></div>
+          </div>
+          <div>
+            <span
+              class="text-xs font-semibold tracking-[0.2em] uppercase text-gold mb-3 block"
+              >Meet the Expert</span
+            >
+            <h2
+              class="font-display text-3xl md:text-4xl font-bold text-text-dark mb-1"
+            >
+              Happiness Warribo
+            </h2>
+            <p
+              class="text-xs font-semibold tracking-[0.12em] uppercase text-gold mb-6"
+            >
+              Professional Agro Real Estate Consultant
+            </p>
+            <div class="w-16 h-1 bg-gold my-6"></div>
+            <div class="text-base text-text-mid leading-relaxed space-y-5">
+              <p>
+                Happiness is a dedicated agro real estate consultant committed
+                to helping individuals and families build lasting wealth through
+                strategic agricultural investments. With a strong understanding
+                of both farmland value and long term agribusiness potential, she
+                guides clients toward opportunities that offer stability,
+                passive income, and sustainable growth.
+              </p>
+              <p>
+                Known for her transparency, patience, and hands-on support,
+                Happiness simplifies the investment journey from property
+                discovery to documentation and after sales guidance. Her goal is
+                not just to sell land, but to empower clients with assets that
+                appreciate, generate consistent returns, and contribute to
+                generational prosperity.
+              </p>
+              <p>
+                Driven by integrity and a passion for agriculture, she has
+                helped many investors confidently step into the agro real estate
+                space, making informed decisions that align with their financial
+                goals.
+              </p>
+              <p>
+                With Happiness, clients don't just acquire land &mdash; they
+                secure a future built on value, growth, and long-term
+                opportunity.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="py-20 bg-cream">
+      <div class="max-w-screen-xl mx-auto px-8">
+        <div class="text-center mb-14">
+          <span
+            class="text-xs font-semibold tracking-[0.2em] uppercase text-gold mb-3 block"
+            >Simple Process</span
+          >
+          <h2
+            class="font-display text-4xl md:text-5xl font-bold text-text-dark"
+          >
+            From Investment to <em class="italic text-forest-mid">Harvest</em>
+          </h2>
+          <div class="w-16 h-1 bg-gold mx-auto my-6"></div>
+        </div>
+        <div class="steps-grid grid grid-cols-4 relative">
+          <div class="p-8 relative">
+            <div
+              class="step-arrow absolute top-10 right-0 w-6 h-6 bg-gold rounded-full flex items-center justify-center text-xs text-forest font-bold z-10"
+            >
+              &rarr;
+            </div>
+            <div class="text-4xl mb-4">&#127793;</div>
+            <div
+              class="font-display text-xs font-bold tracking-[0.2em] text-gold mb-2"
+            >
+              01
+            </div>
+            <div class="font-display text-lg font-semibold text-text-dark mb-3">
+              Choose Your Plot
+            </div>
+            <div class="text-sm text-text-mid leading-relaxed">
+              Select a plot size that fits your budget. Plots start from
+              affordable entry points with clear documentation.
+            </div>
+          </div>
+          <div class="p-8 relative border-l border-cream-dark">
+            <div
+              class="step-arrow absolute top-10 right-0 w-6 h-6 bg-gold rounded-full flex items-center justify-center text-xs text-forest font-bold z-10"
+            >
+              &rarr;
+            </div>
+            <div class="text-4xl mb-4">&#128196;</div>
+            <div
+              class="font-display text-xs font-bold tracking-[0.2em] text-gold mb-2"
+            >
+              02
+            </div>
+            <div class="font-display text-lg font-semibold text-text-dark mb-3">
+              Get Your Title
+            </div>
+            <div class="text-sm text-text-mid leading-relaxed">
+              Receive your Certificate of Occupancy and full legal documentation
+              within weeks of purchase.
+            </div>
+          </div>
+          <div class="p-8 relative border-l border-cream-dark">
+            <div
+              class="step-arrow absolute top-10 right-0 w-6 h-6 bg-gold rounded-full flex items-center justify-center text-xs text-forest font-bold z-10"
+            >
+              &rarr;
+            </div>
+            <div class="text-4xl mb-4">&#127796;</div>
+            <div
+              class="font-display text-xs font-bold tracking-[0.2em] text-gold mb-2"
+            >
+              03
+            </div>
+            <div class="font-display text-lg font-semibold text-text-dark mb-3">
+              We Manage Everything
+            </div>
+            <div class="text-sm text-text-mid leading-relaxed">
+              YARA Group's agri-team plants, maintains, and manages your oil
+              palms &mdash; completely hands-free for you.
+            </div>
+          </div>
+          <div class="p-8 relative border-l border-cream-dark">
+            <div class="text-4xl mb-4">&#128176;</div>
+            <div
+              class="font-display text-xs font-bold tracking-[0.2em] text-gold mb-2"
+            >
+              04
+            </div>
+            <div class="font-display text-lg font-semibold text-text-dark mb-3">
+              Receive Harvest Income
+            </div>
+            <div class="text-sm text-text-mid leading-relaxed">
+              From year 3 onward, your palms produce bunches of oil palm fruit
+              twice a year, generating consistent passive income.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESTATES / PHASES -->
+    <section class="py-24 bg-cream" id="estates">
+      <div class="max-w-screen-xl mx-auto px-8">
+        <div class="text-center max-w-2xl mx-auto mb-4">
+          <span
+            class="text-xs font-semibold tracking-[0.2em] uppercase text-gold mb-3 block"
+            >Our Portfolio</span
+          >
+          <h2
+            class="font-display text-4xl md:text-5xl font-bold text-text-dark"
+          >
+            Explore All Our <em class="italic text-forest-mid">Estates</em>
+          </h2>
+          <div class="w-16 h-1 bg-gold mx-auto my-6"></div>
+          <p class="text-base text-text-mid leading-relaxed">
+            Palmrich is more than a land investment &mdash; it's a foundation
+            for generational wealth. Built to grow in value, it offers you the
+            opportunity to earn passive income, build lasting assets, and secure
+            a financial legacy that stands the test of time.
+          </p>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16"
+          id="phasesGrid"
+        ></div>
+      </div>
+    </section>
+
+    <!-- STORY -->
+    <section class="py-24 bg-white" id="story">
+      <div class="max-w-screen-xl mx-auto px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-20 items-start">
+          <div>
+            <span
+              class="text-xs font-semibold tracking-[0.2em] uppercase text-gold mb-3 block"
+              >Who We Are</span
+            >
+            <h2
+              class="font-display text-4xl md:text-5xl font-bold text-text-dark"
+            >
+              The <em class="italic text-forest-mid">Palmrich</em> Story
+            </h2>
+            <div class="w-16 h-1 bg-gold my-6"></div>
+            <div class="text-base text-text-mid leading-relaxed space-y-5">
+              <p>
+                Palmrich began with a simple but powerful vision: to transform
+                ordinary land into extraordinary long-term value. In a world
+                where investments rise and fall overnight, Palmrich set out to
+                create something different &mdash; an asset that grows steadily,
+                pays consistently, and endures across generations.
+              </p>
+              <p>
+                Built on fertile soil and backed by a team committed to
+                transparency and real agricultural development, Palmrich Estate
+                became more than just farmland. It evolved into a strategic
+                wealth-building platform for everyday investors seeking
+                stability, passive income, and meaningful legacy.
+              </p>
+              <p>
+                Investors didn't just buy land &mdash; they secured a future.
+                With clear processes, honest documentation, and reliable
+                support, Palmrich earned the trust of families, professionals,
+                and visionaries who wanted an asset that would stand the test of
+                time.
+              </p>
+              <p>
+                Today, Palmrich is known as a dependable gateway to
+                <em class="italic text-forest-mid font-medium"
+                  >transgenerational wealth</em
+                >, powered by a crop with consistent global demand and designed
+                to appreciate year after year.
+              </p>
+              <p class="font-display text-lg italic text-forest mt-2">
+                Palmrich isn't just an estate. It's a story of prosperity that
+                keeps growing.
+              </p>
+            </div>
+          </div>
+          <div>
+            <video class="w-full" controls>
+              <source src="./happy.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA BANNER -->
+    <section class="cta-banner py-28 px-8 text-center">
+      <div class="relative z-10 max-w-2xl mx-auto">
+        <span
+          class="text-xs font-semibold tracking-[0.2em] uppercase text-gold-light mb-4 block"
+          >Get Started With YARA Group</span
+        >
+        <h2
+          class="font-display text-4xl md:text-6xl font-bold text-white leading-tight mb-4"
+        >
+          Own An Oil Palm Plantation Today
+        </h2>
+        <p class="text-base text-white/75 mb-10 leading-relaxed">
+          Discover how YARA Group helps you own a sustainable asset that pays
+          for decades. Get a quick overview of our solutions, features, and how
+          to get started.
+        </p>
+        <button class="btn-primary" onclick="openWebinar()">
+          Download Brochure
+        </button>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="py-24 bg-cream-dark">
+      <div class="max-w-screen-xl mx-auto px-8 text-center">
+        <span
+          class="text-xs font-semibold tracking-[0.2em] uppercase text-gold mb-3 block"
+          >Social Proof</span
+        >
+        <h2 class="font-display text-4xl md:text-5xl font-bold text-text-dark">
+          Testimonials
+        </h2>
+        <div class="max-w-2xl mx-auto mt-12 bg-forest p-2">
+          <video class="w-full block" controls>
+            <source src="happy.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-forest text-cream/60" id="contact">
+      <div class="max-w-screen-xl mx-auto px-8 pt-16 pb-8">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12"
+          style="border-bottom: 1px solid rgba(245, 240, 232, 0.1)"
+        >
+          <div>
+            <div class="font-display text-2xl font-bold text-cream mb-4">
+              <span class="text-gold-light">YARA</span> Group
+            </div>
+            <p class="text-sm leading-relaxed">
+              Whether you're buying, selling, or investing, real estate can be
+              complex. That's why we provide expert advice, strategic direction,
+              and personalized care &mdash; ensuring your goals are not only
+              accomplished but surpassed with ease and profitability.
+            </p>
+          </div>
+          <div>
+            <div
+              class="text-sm font-semibold tracking-wider uppercase text-cream mb-5"
+            >
+              About Us
+            </div>
+            <a
+              href="#"
+              class="block text-sm text-cream/60 no-underline mb-2 hover:text-gold-light transition-colors"
+              >About Organisation</a
+            >
+            <a
+              href="#"
+              class="block text-sm text-cream/60 no-underline mb-2 hover:text-gold-light transition-colors"
+              >Our Journeys</a
+            >
+            <a
+              href="#"
+              class="block text-sm text-cream/60 no-underline mb-2 hover:text-gold-light transition-colors"
+              >Our Partners</a
+            >
+          </div>
+          <div>
+            <div
+              class="text-sm font-semibold tracking-wider uppercase text-cream mb-5"
+            >
+              Quick Links
+            </div>
+            <a
+              href="#"
+              class="block text-sm text-cream/60 no-underline mb-2 hover:text-gold-light transition-colors"
+              >Introduction</a
+            >
+            <a
+              href="#"
+              class="block text-sm text-cream/60 no-underline mb-2 hover:text-gold-light transition-colors"
+              >Organisation Team</a
+            >
+            <a
+              href="#"
+              class="block text-sm text-cream/60 no-underline mb-2 hover:text-gold-light transition-colors"
+              >Press Enquiries</a
+            >
+            <div
+              class="text-sm font-semibold tracking-wider uppercase text-cream mb-5 mt-6"
+            >
+              Important Links
+            </div>
+            <a
+              href="#"
+              class="block text-sm text-cream/60 no-underline mb-2 hover:text-gold-light transition-colors"
+              >Privacy Policy</a
+            >
+            <a
+              href="#"
+              class="block text-sm text-cream/60 no-underline mb-2 hover:text-gold-light transition-colors"
+              >Terms &amp; Conditions</a
+            >
+          </div>
+          <div>
+            <div
+              class="text-sm font-semibold tracking-wider uppercase text-cream mb-5"
+            >
+              Contact Info
+            </div>
+            <div class="flex gap-3 mb-4 text-sm items-start">
+              <span class="text-gold-light mt-0.5 shrink-0">&#128205;</span>
+              <span>Lagos, Nigeria</span>
+            </div>
+            <div class="flex gap-3 mb-4 text-sm items-start">
+              <span class="text-gold-light mt-0.5 shrink-0">&#128222;</span>
+              <a
+                href="tel:+2348000000000"
+                class="text-cream/60 no-underline hover:text-gold-light transition-colors"
+                >+234 800 YARA GROUP</a
+              >
+            </div>
+            <div class="flex gap-3 mb-4 text-sm items-start">
+              <span class="text-gold-light mt-0.5 shrink-0"
+                >&#9993;&#65039;</span
+              >
+              <a
+                href="mailto:info@yaragroup.ng"
+                class="text-cream/60 no-underline hover:text-gold-light transition-colors"
+                >info@yaragroup.ng</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="pt-6 text-center text-xs text-cream/40">
+          &copy; 2025 YARA Group. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+      // ── API BASE URL ──
+      const API_BASE = "https://your-backend-api.com/api"; // UPDATE THIS TO YOUR BACKEND
+
+      // ── PHASES DATA ──
+      const phases = [
+        {
+          name: "Palmrich Phase 1",
+          img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Elaeis_guineensis_MS_3467.jpg/800px-Elaeis_guineensis_MS_3467.jpg",
+          desc: "Our very first development, Phase 1 laid the foundation — prime oil palm land, fully verified, and high-value appreciation. It sold out quickly and set the tone for future phases.",
+          soldOut: true,
+        },
+        {
+          name: "Palmrich Phase 2",
+          img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Oil_palm_plantation_in_Mersing_District.jpg/800px-Oil_palm_plantation_in_Mersing_District.jpg",
+          desc: "Phase 2 attracted early land owners who recognized opportunity early. With great access roads and a thriving palm canopy already established, it became a hotspot for savvy investors.",
+          soldOut: true,
+        },
+        {
+          name: "Palmrich Phase 3",
+          img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Oilpalm_malaysia.jpg/800px-Oilpalm_malaysia.jpg",
+          desc: "Tucked slightly off the main road, Phase 3 offered a perfect mix of privacy and value. Mature oil palms already in harvest cycle appealed to clients seeking immediate returns.",
+          soldOut: true,
+        },
+        {
+          name: "Palmrich Phase 4",
+          img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/YosriLadangKelapaSawit.jpg/800px-YosriLadangKelapaSawit.jpg",
+          desc: "This phase offered enhanced infrastructure and was our first to introduce perimeter fencing and estate layout design. Investors rushed in, and it sold out in record time after launch.",
+          soldOut: true,
+        },
+        {
+          name: "Palmrich Phase 5",
+          img: "https://images.pexels.com/photos/2950868/pexels-photo-2950868.jpeg?auto=compress&cs=tinysrgb&w=800",
+          desc: "Located in Ibadan, this phase features a thriving agro palm plantation already fruiting — the perfect blend of land ownership and immediate agricultural returns in a fast-growing city.",
+          soldOut: false,
+        },
+        {
+          name: "Palmrich Phase 6",
+          img: "https://images.pexels.com/photos/30251970/pexels-photo-30251970.jpeg?auto=compress&cs=tinysrgb&w=800",
+          desc: "Known for its prime location and active oil palm plantation already bearing fruit, Phase 6 attracts high-value buyers seeking both prestige and steady agricultural returns.",
+          soldOut: false,
+        },
+      ];
+
+      // ── RENDER PHASES ──
+      function renderPhases() {
+        var grid = document.getElementById("phasesGrid");
+        var html = "";
+        for (var i = 0; i < phases.length; i++) {
+          var p = phases[i];
+          html +=
+            '<div class="phase-card bg-white overflow-hidden shadow-md" style="border-radius:2px">';
+          html += '<div class="relative overflow-hidden h-56">';
+          html +=
+            '<img src="' +
+            p.img +
+            '" alt="' +
+            p.name +
+            '" class="phase-img w-full h-full object-cover" onerror="this.onerror=null;this.src=\'https://images.pexels.com/photos/2950868/pexels-photo-2950868.jpeg?auto=compress&cs=tinysrgb&w=800\'" />';
+          if (p.soldOut) {
+            html +=
+              '<div class="absolute inset-0 flex items-center justify-center" style="background:rgba(10,20,10,0.35)">';
+            html +=
+              '<div class="sold-out-stamp text-white font-display text-sm font-bold tracking-[0.2em] uppercase px-6 py-2" style="background:rgba(180,30,30,0.7)">Sold Out</div>';
+            html += "</div>";
+          }
+          html += "</div>";
+          html += '<div class="p-6">';
+          html +=
+            '<div class="font-display text-lg font-bold text-text-dark mb-2">' +
+            p.name +
+            "</div>";
+          html +=
+            '<div class="text-sm text-text-mid leading-relaxed">' +
+            p.desc +
+            "</div>";
+          if (!p.soldOut) {
+            html +=
+              "<button class=\"btn-primary mt-4\" style=\"font-size:0.78rem;padding:0.65rem 1.25rem\" onclick=\"openInspection(); fbq('track','ViewContent',{content_name:'" +
+              p.name +
+              "',content_type:'property'});\">Book Inspection &rarr;</button>";
+          }
+          html += "</div></div>";
+        }
+        grid.innerHTML = html;
+      }
+
+      // ── NAV SCROLL ──
+      window.addEventListener("scroll", function () {
+        var nav = document.getElementById("mainNav");
+        if (window.scrollY > 60) {
+          nav.classList.add("scrolled");
+        } else {
+          nav.classList.remove("scrolled");
+        }
+      });
+
+      // ── MOBILE MENU ──
+      function toggleMenu() {
+        document.getElementById("mobileNav").classList.toggle("open");
+      }
+      function closeMenu() {
+        document.getElementById("mobileNav").classList.remove("open");
+      }
+
+      // ── MODALS ──
+      function openWebinar() {
+        document.getElementById("webinarModal").style.display = "flex";
+        if (typeof fbq !== "undefined") fbq("track", "Lead");
+      }
+      function closeWebinar() {
+        document.getElementById("webinarModal").style.display = "none";
+      }
+      function openInspection() {
+        document.getElementById("inspectionModal").style.display = "flex";
+        if (typeof fbq !== "undefined") fbq("track", "Schedule");
+      }
+      function closeInspection() {
+        document.getElementById("inspectionModal").style.display = "none";
+      }
+
+      // Close modals on overlay click
+      document
+        .getElementById("webinarModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeWebinar();
+        });
+      document
+        .getElementById("inspectionModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeInspection();
+        });
+
+      // ── FORM SUBMISSIONS ──
+      async function submitWebinar() {
+        var btn = document.getElementById("webSubmitBtn");
+        var email = document.getElementById("webEmail").value;
+        var phone = document.getElementById("webPhone").value;
+        var name = document.getElementById("webName").value;
+        var available = document.getElementById("webAvailable").value;
+
+        if (!email || !phone || !name) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+
+        btn.textContent = "Signing up...";
+        btn.disabled = true;
+
+        try {
+          var res = await fetch(API_BASE + "/consultation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              fullName: name,
+              email: email,
+              phone: phone,
+              propertyInterest: "palmrich",
+              propertyType: "palmrich",
+              preferredDate: new Date().toISOString(),
+              message: available,
+            }),
+          });
+          if (!res.ok) throw new Error("Request failed");
+          alert("You're registered! We'll send you the webinar link.");
+          if (typeof fbq !== "undefined") fbq("track", "CompleteRegistration");
+          closeWebinar();
+          document.getElementById("webEmail").value = "";
+          document.getElementById("webPhone").value = "";
+          document.getElementById("webName").value = "";
+          document.getElementById("webAvailable").value = "";
+        } catch (err) {
+          alert(err.message || "Failed. Please try again.");
+        } finally {
+          btn.textContent = "Sign Up";
+          btn.disabled = false;
+        }
+      }
+
+      async function submitInspection() {
+        var btn = document.getElementById("insSubmitBtn");
+        var email = document.getElementById("insEmail").value;
+        var name = document.getElementById("insName").value;
+        var phone = document.getElementById("insPhone").value;
+        var source = document.getElementById("insSource").value;
+
+        if (!email || !name || !phone) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+
+        btn.textContent = "Booking...";
+        btn.disabled = true;
+
+        try {
+          var res = await fetch(API_BASE + "/inspection", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: email,
+              name: name,
+              phone: phone,
+              source: source,
+            }),
+          });
+          if (!res.ok) throw new Error("Request failed");
+          alert("Inspection booked! We'll be in touch within 24 hours.");
+          if (typeof fbq !== "undefined") fbq("track", "CompleteRegistration");
+          closeInspection();
+          document.getElementById("insEmail").value = "";
+          document.getElementById("insName").value = "";
+          document.getElementById("insPhone").value = "";
+          document.getElementById("insSource").value = "";
+        } catch (err) {
+          alert(err.message || "Failed. Please try again.");
+        } finally {
+          btn.textContent = "Book Inspection";
+          btn.disabled = false;
+        }
+      }
+
+      // ── AUTO-OPEN WEBINAR AFTER 3s ──
+      setTimeout(function () {
+        openWebinar();
+      }, 3000);
+
+      // ── INIT ──
+      renderPhases();
+    </script>
   </body>
 </html>
