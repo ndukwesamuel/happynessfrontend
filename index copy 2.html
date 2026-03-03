@@ -1100,10 +1100,7 @@
     <!-- JAVASCRIPT -->
     <script>
       // ── API BASE URL ──
-      const API_BASE = "https://happynessbackend.onrender.com";
-
-      // ── THANK YOU PAGE URL ──
-      const THANK_YOU_URL = "./thankyou.html";
+      const API_BASE = "https://happynessbackend.onrender.com"; // UPDATE THIS TO YOUR BACKEND
 
       // ── PHASES DATA ──
       const phases = [
@@ -1179,7 +1176,7 @@
             "</div>";
           if (!p.soldOut) {
             html +=
-              "<button class=\"btn-primary mt-4\" style=\"font-size:0.78rem;padding:0.65rem 1.25rem\" onclick=\"openInspection(); if(typeof fbq!=='undefined') fbq('track','ViewContent',{content_name:'" +
+              "<button class=\"btn-primary mt-4\" style=\"font-size:0.78rem;padding:0.65rem 1.25rem\" onclick=\"openInspection(); fbq('track','ViewContent',{content_name:'" +
               p.name +
               "',content_type:'property'});\">Book Inspection &rarr;</button>";
           }
@@ -1265,19 +1262,16 @@
             }),
           });
           if (!res.ok) throw new Error("Request failed");
-
-          // Fire Meta Pixel event before redirect
-          if (typeof fbq !== "undefined") {
-            fbq("track", "CompleteRegistration", {
-              content_name: "Webinar Signup",
-              content_category: "webinar",
-            });
-          }
-
-          // Redirect to thank you page
-          window.location.href = THANK_YOU_URL;
+          alert("You're registered! We'll send you the webinar link.");
+          if (typeof fbq !== "undefined") fbq("track", "CompleteRegistration");
+          closeWebinar();
+          document.getElementById("webEmail").value = "";
+          document.getElementById("webPhone").value = "";
+          document.getElementById("webName").value = "";
+          document.getElementById("webAvailable").value = "";
         } catch (err) {
           alert(err.message || "Failed. Please try again.");
+        } finally {
           btn.textContent = "Sign Up";
           btn.disabled = false;
         }
@@ -1310,19 +1304,16 @@
             }),
           });
           if (!res.ok) throw new Error("Request failed");
-
-          // Fire Meta Pixel event before redirect
-          if (typeof fbq !== "undefined") {
-            fbq("track", "CompleteRegistration", {
-              content_name: "Site Inspection",
-              content_category: "inspection",
-            });
-          }
-
-          // Redirect to thank you page
-          window.location.href = THANK_YOU_URL;
+          alert("Inspection booked! We'll be in touch within 24 hours.");
+          if (typeof fbq !== "undefined") fbq("track", "CompleteRegistration");
+          closeInspection();
+          document.getElementById("insEmail").value = "";
+          document.getElementById("insName").value = "";
+          document.getElementById("insPhone").value = "";
+          document.getElementById("insSource").value = "";
         } catch (err) {
           alert(err.message || "Failed. Please try again.");
+        } finally {
           btn.textContent = "Book Inspection";
           btn.disabled = false;
         }
