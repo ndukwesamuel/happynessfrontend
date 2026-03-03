@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useMutateData, useFetchData } from "../hook/Request";
 
+import consultantImg from "../assets/happy.jpeg";
+
 /* ─────────────────────────────────────────────
    YARA GROUP – Agriculture-first landing page
    Inspired by medwwidehome.com.ng
@@ -773,7 +775,9 @@ const YaraHome = () => {
           <div className="agent-grid">
             <div className="agent-img-wrap">
               <img
-                src="https://medwwidehome.com.ng/wp-content/uploads/2025/11/WhatsApp_Image_2025-11-21_at_15.47.14_c78a4735-removebg-preview.png" //"https://images.unsplash.com/photo-1573496799652-408c2ac9fe98?w=800&q=80"
+                // src="../" //"https://medwwidehome.com.ng/wp-content/uploads/2025/11/WhatsApp_Image_2025-11-21_at_15.47.14_c78a4735-removebg-preview.png" //"https://images.unsplash.com/photo-1573496799652-408c2ac9fe98?w=800&q=80"
+
+                src={consultantImg}
                 alt="Our Consultant"
                 className="agent-img"
               />
