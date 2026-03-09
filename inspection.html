@@ -1,0 +1,1452 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YARA Group — Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --cream: #f5f0e8;
+        --cream-dark: #ede6d6;
+        --forest: #1a2e1a;
+        --forest-mid: #2d4a2d;
+        --forest-light: #3d5c3d;
+        --gold: #c49a3c;
+        --gold-light: #e0b84a;
+        --text-dark: #1a1a1a;
+        --text-mid: #4a4a4a;
+        --text-light: #7a7a7a;
+        --sidebar-w: 260px;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--cream);
+        color: var(--text-dark);
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* SIDEBAR */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: var(--forest);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 50;
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+      }
+      .sidebar-logo {
+        padding: 2rem 1.75rem 1.5rem;
+        border-bottom: 1px solid rgba(245, 240, 232, 0.08);
+        flex-shrink: 0;
+      }
+      .sidebar-logo a {
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--cream);
+        text-decoration: none;
+      }
+      .sidebar-logo a span {
+        color: var(--gold-light);
+      }
+      .sidebar-logo p {
+        font-size: 0.7rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: rgba(245, 240, 232, 0.35);
+        margin-top: 0.25rem;
+      }
+      .sidebar-nav {
+        padding: 1.5rem 0;
+        flex: 1;
+      }
+      .nav-label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(245, 240, 232, 0.3);
+        padding: 0 1.75rem;
+        margin-bottom: 0.5rem;
+        margin-top: 1.25rem;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.7rem 1.75rem;
+        color: rgba(245, 240, 232, 0.6);
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        border-left: 3px solid transparent;
+        transition: all 0.2s;
+        background: none;
+        border-top: none;
+        border-right: none;
+        border-bottom: none;
+        width: 100%;
+        text-align: left;
+        font-family: "DM Sans", sans-serif;
+      }
+      .nav-item:hover {
+        color: var(--cream);
+        background: rgba(255, 255, 255, 0.04);
+        border-left-color: rgba(196, 154, 60, 0.4);
+      }
+      .nav-item.active {
+        color: var(--gold-light);
+        background: rgba(196, 154, 60, 0.08);
+        border-left-color: var(--gold-light);
+      }
+      .nav-item .icon {
+        font-size: 1rem;
+        width: 1.25rem;
+        text-align: center;
+      }
+      .nav-badge {
+        margin-left: auto;
+        background: var(--gold);
+        color: var(--forest);
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 0.15rem 0.5rem;
+        border-radius: 999px;
+        min-width: 20px;
+        text-align: center;
+      }
+      .sidebar-footer {
+        padding: 1.25rem 1.75rem;
+        border-top: 1px solid rgba(245, 240, 232, 0.08);
+        font-size: 0.75rem;
+        color: rgba(245, 240, 232, 0.3);
+        flex-shrink: 0;
+      }
+
+      /* MAIN */
+      .main {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* TOPBAR */
+      .topbar {
+        background: rgba(245, 240, 232, 0.97);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(196, 154, 60, 0.15);
+        padding: 1rem 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 40;
+      }
+      .topbar-left h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--forest);
+      }
+      .topbar-left p {
+        font-size: 0.75rem;
+        color: var(--text-light);
+        margin-top: 0.1rem;
+        letter-spacing: 0.02em;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .search-wrap {
+        position: relative;
+      }
+      .search-wrap input {
+        background: white;
+        border: 1px solid rgba(196, 154, 60, 0.2);
+        padding: 0.55rem 1rem 0.55rem 2.25rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.8rem;
+        color: var(--text-dark);
+        width: 220px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .search-wrap input:focus {
+        border-color: var(--gold);
+      }
+      .search-wrap .si {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-light);
+        font-size: 0.8rem;
+      }
+      .badge-admin {
+        background: var(--forest);
+        color: var(--gold-light);
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 0.4rem 0.9rem;
+      }
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        flex-direction: column;
+        gap: 4px;
+        padding: 4px;
+      }
+      .menu-toggle span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: var(--forest);
+      }
+
+      /* PAGE TABS */
+      .page-tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 2px solid var(--cream-dark);
+        background: white;
+        padding: 0 2.5rem;
+        position: sticky;
+        top: 72px;
+        z-index: 39;
+      }
+      .page-tab {
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 1rem 1.5rem;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--text-light);
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .page-tab:hover {
+        color: var(--text-dark);
+      }
+      .page-tab.active {
+        color: var(--forest);
+        border-bottom-color: var(--gold);
+      }
+      .tab-count {
+        background: var(--cream-dark);
+        color: var(--text-mid);
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 0.15rem 0.5rem;
+        border-radius: 999px;
+      }
+      .page-tab.active .tab-count {
+        background: var(--gold);
+        color: var(--forest);
+      }
+
+      /* PAGE CONTENT */
+      .page-content {
+        padding: 2.5rem;
+        flex: 1;
+      }
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+
+      /* STATS */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.25rem;
+        margin-bottom: 2.5rem;
+      }
+      .stat-card {
+        background: white;
+        border-top: 3px solid transparent;
+        padding: 1.5rem 1.75rem;
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s;
+      }
+      .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.09);
+      }
+      .stat-card::after {
+        content: "";
+        position: absolute;
+        bottom: -20px;
+        right: -20px;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        opacity: 0.05;
+      }
+      .stat-card.sc-all {
+        border-top-color: var(--forest);
+      }
+      .stat-card.sc-all::after {
+        background: var(--forest);
+      }
+      .stat-card.sc-pending {
+        border-top-color: #d97706;
+      }
+      .stat-card.sc-pending::after {
+        background: #d97706;
+      }
+      .stat-card.sc-approved {
+        border-top-color: #059669;
+      }
+      .stat-card.sc-approved::after {
+        background: #059669;
+      }
+      .stat-card.sc-rejected {
+        border-top-color: #dc2626;
+      }
+      .stat-card.sc-rejected::after {
+        background: #dc2626;
+      }
+      .stat-num {
+        font-family: "Playfair Display", serif;
+        font-size: 2.5rem;
+        font-weight: 900;
+        line-height: 1;
+        margin-bottom: 0.35rem;
+      }
+      .stat-card.sc-all .stat-num {
+        color: var(--forest);
+      }
+      .stat-card.sc-pending .stat-num {
+        color: #d97706;
+      }
+      .stat-card.sc-approved .stat-num {
+        color: #059669;
+      }
+      .stat-card.sc-rejected .stat-num {
+        color: #dc2626;
+      }
+      .stat-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-light);
+      }
+      .stat-icon {
+        position: absolute;
+        top: 1.25rem;
+        right: 1.5rem;
+        font-size: 1.5rem;
+        opacity: 0.18;
+      }
+
+      /* TABLE */
+      .table-wrap {
+        background: white;
+        border: 1px solid #ece8e0;
+        overflow: hidden;
+        margin-bottom: 2rem;
+      }
+      .table-toolbar {
+        background: white;
+        border-bottom: 1px solid #f0ece4;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .filter-tabs {
+        display: flex;
+        gap: 0.25rem;
+      }
+      .filter-tab {
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 0.45rem 1rem;
+        border: 1px solid transparent;
+        background: none;
+        cursor: pointer;
+        color: var(--text-light);
+        transition: all 0.18s;
+      }
+      .filter-tab:hover {
+        color: var(--text-dark);
+        background: var(--cream);
+      }
+      .filter-tab.active {
+        background: var(--forest);
+        color: var(--gold-light);
+      }
+      .toolbar-search {
+        position: relative;
+      }
+      .toolbar-search input {
+        background: var(--cream);
+        border: 1px solid rgba(196, 154, 60, 0.15);
+        padding: 0.5rem 1rem 0.5rem 2rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.8rem;
+        color: var(--text-dark);
+        width: 240px;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .toolbar-search input:focus {
+        border-color: var(--gold);
+        background: white;
+      }
+      .toolbar-search .si {
+        position: absolute;
+        left: 0.65rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.8rem;
+        color: var(--text-light);
+      }
+      .table-overflow {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+      }
+      thead tr {
+        background: var(--cream);
+        border-bottom: 1px solid #ece8e0;
+      }
+      th {
+        padding: 0.8rem 1.25rem;
+        text-align: left;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-light);
+        white-space: nowrap;
+      }
+      tbody tr {
+        border-bottom: 1px solid #f5f0e8;
+        transition: background 0.15s;
+      }
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      tbody tr:hover {
+        background: #faf8f3;
+      }
+      td {
+        padding: 1rem 1.25rem;
+        font-size: 0.85rem;
+        color: var(--text-mid);
+        vertical-align: middle;
+      }
+
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Playfair Display", serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--cream);
+        flex-shrink: 0;
+      }
+      .person-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .person-name {
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: var(--text-dark);
+        white-space: nowrap;
+      }
+      .person-id {
+        font-size: 0.7rem;
+        color: var(--text-light);
+        margin-top: 0.1rem;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 0.3rem 0.75rem;
+        white-space: nowrap;
+      }
+      .pill-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        display: inline-block;
+        flex-shrink: 0;
+      }
+      .pill.pending {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .pill.pending .pill-dot {
+        background: #d97706;
+      }
+      .pill.approved {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .pill.approved .pill-dot {
+        background: #059669;
+      }
+      .pill.rejected {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .pill.rejected .pill-dot {
+        background: #dc2626;
+      }
+
+      .type-badge {
+        background: var(--cream-dark);
+        color: var(--text-mid);
+        font-size: 0.7rem;
+        font-weight: 500;
+        padding: 0.25rem 0.65rem;
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .type-badge.plantation {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .type-badge.land {
+        background: #fef9c3;
+        color: #713f12;
+      }
+      .type-badge.commercial {
+        background: #ede9fe;
+        color: #4c1d95;
+      }
+      .type-badge.residential {
+        background: #dbeafe;
+        color: #1e3a5f;
+      }
+
+      .btn-approve,
+      .btn-reject,
+      .btn-reset {
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 0.4rem 0.9rem;
+        border: none;
+        cursor: pointer;
+        transition:
+          opacity 0.15s,
+          transform 0.1s;
+        white-space: nowrap;
+      }
+      .btn-approve:hover,
+      .btn-reject:hover,
+      .btn-reset:hover {
+        opacity: 0.8;
+        transform: translateY(-1px);
+      }
+      .btn-approve {
+        background: var(--forest);
+        color: var(--gold-light);
+      }
+      .btn-reject {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .btn-reset {
+        background: var(--cream-dark);
+        color: var(--text-mid);
+      }
+      .actions-cell {
+        display: flex;
+        gap: 0.4rem;
+        align-items: center;
+      }
+
+      .empty-state {
+        padding: 4rem 2rem;
+        text-align: center;
+        color: var(--text-light);
+      }
+      .empty-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.4;
+      }
+      .empty-state p {
+        font-size: 0.875rem;
+      }
+      .loader {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(196, 154, 60, 0.2);
+        border-top-color: var(--gold);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        vertical-align: middle;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .table-footer {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.75rem;
+        color: var(--text-light);
+        background: var(--cream);
+        border-top: 1px solid #ece8e0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .gold-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background: var(--gold);
+        border-radius: 50%;
+        margin-right: 0.4rem;
+        vertical-align: middle;
+      }
+
+      /* TOAST */
+      .toast-container {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 300;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        pointer-events: none;
+      }
+      .toast {
+        background: var(--forest);
+        color: var(--cream);
+        padding: 0.75rem 1.25rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border-left: 3px solid var(--gold);
+        animation:
+          slideIn 0.3s ease,
+          fadeOut 0.3s ease 2.5s forwards;
+        max-width: 300px;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(40px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes fadeOut {
+        to {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 900px) {
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+        }
+        .menu-toggle {
+          display: flex !important;
+        }
+        .search-wrap {
+          display: none;
+        }
+        .page-content {
+          padding: 1.25rem;
+        }
+        .topbar {
+          padding: 0.9rem 1.25rem;
+        }
+        .page-tabs {
+          padding: 0 1rem;
+          top: 64px;
+        }
+      }
+      @media (max-width: 540px) {
+        .stats-row {
+          grid-template-columns: 1fr 1fr;
+          gap: 0.75rem;
+        }
+        .filter-tabs {
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <a href="#"><span>YARA</span> Group</a>
+        <p>Admin Portal</p>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-label">Leads</div>
+        <button
+          class="nav-item active"
+          id="sideNav-inspection"
+          onclick="switchTab('inspection')"
+        >
+          <span class="icon">&#128203;</span> Inspection Requests
+          <span class="nav-badge" id="sideInsBadge">—</span>
+        </button>
+        <button
+          class="nav-item"
+          id="sideNav-consultation"
+          onclick="switchTab('consultation')"
+        >
+          <span class="icon">&#127808;</span> Consultations
+          <span class="nav-badge" id="sideConsBadge">—</span>
+        </button>
+        <div class="nav-label">Estates</div>
+        <button class="nav-item">
+          <span class="icon">&#127968;</span> Palmrich Phases
+        </button>
+        <button class="nav-item">
+          <span class="icon">&#128176;</span> Transactions
+        </button>
+        <div class="nav-label">Settings</div>
+        <button class="nav-item">
+          <span class="icon">&#9881;&#65039;</span> Configuration
+        </button>
+        <button class="nav-item">
+          <span class="icon">&#128274;</span> Logout
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        &copy; 2025 YARA Group &mdash; Admin v1.0
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 1rem">
+          <button
+            class="menu-toggle"
+            id="menuToggle"
+            onclick="
+              document.getElementById('sidebar').classList.toggle('open')
+            "
+          >
+            <span></span><span></span><span></span>
+          </button>
+          <div class="topbar-left">
+            <h1 id="topbarTitle">Inspection Requests</h1>
+            <p id="topbarSub">Manage and review all site inspection bookings</p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="search-wrap">
+            <span class="si">&#128269;</span>
+            <input
+              type="text"
+              placeholder="Quick search…"
+              id="topSearch"
+              oninput="syncSearch(this.value)"
+            />
+          </div>
+          <div class="badge-admin">Admin</div>
+        </div>
+      </header>
+
+      <!-- PAGE TABS -->
+      <div class="page-tabs">
+        <button
+          class="page-tab active"
+          id="tab-inspection"
+          onclick="switchTab('inspection')"
+        >
+          &#128203; Inspections
+          <span class="tab-count" id="tabCountIns">—</span>
+        </button>
+        <button
+          class="page-tab"
+          id="tab-consultation"
+          onclick="switchTab('consultation')"
+        >
+          &#127808; Consultations
+          <span class="tab-count" id="tabCountCons">—</span>
+        </button>
+      </div>
+
+      <div class="page-content">
+        <!-- ═══ INSPECTION PANEL ═══ -->
+        <div class="tab-panel active" id="panel-inspection">
+          <div class="stats-row">
+            <div class="stat-card sc-all">
+              <span class="stat-icon">&#128203;</span>
+              <div class="stat-num" id="ins-cAll">—</div>
+              <div class="stat-label">Total Requests</div>
+            </div>
+            <div class="stat-card sc-pending">
+              <span class="stat-icon">&#9203;</span>
+              <div class="stat-num" id="ins-cPend">—</div>
+              <div class="stat-label">Awaiting Review</div>
+            </div>
+            <div class="stat-card sc-approved">
+              <span class="stat-icon">&#10004;</span>
+              <div class="stat-num" id="ins-cAppr">—</div>
+              <div class="stat-label">Approved</div>
+            </div>
+            <div class="stat-card sc-rejected">
+              <span class="stat-icon">&#10060;</span>
+              <div class="stat-num" id="ins-cRej">—</div>
+              <div class="stat-label">Rejected</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-toolbar">
+              <div class="filter-tabs">
+                <button
+                  class="filter-tab active"
+                  data-f="all"
+                  onclick="setFilter('inspection', 'all')"
+                >
+                  All
+                </button>
+                <button
+                  class="filter-tab"
+                  data-f="pending"
+                  onclick="setFilter('inspection', 'pending')"
+                >
+                  Pending
+                </button>
+                <button
+                  class="filter-tab"
+                  data-f="approved"
+                  onclick="setFilter('inspection', 'approved')"
+                >
+                  Approved
+                </button>
+                <button
+                  class="filter-tab"
+                  data-f="rejected"
+                  onclick="setFilter('inspection', 'rejected')"
+                >
+                  Rejected
+                </button>
+              </div>
+              <div class="toolbar-search">
+                <span class="si">&#128269;</span>
+                <input
+                  id="ins-search"
+                  type="text"
+                  placeholder="Search name, email, phone…"
+                  oninput="setSearch('inspection', this.value)"
+                />
+              </div>
+            </div>
+            <div class="table-overflow">
+              <div id="ins-tableContainer">
+                <div class="empty-state">
+                  <div class="loader"></div>
+                  <p style="margin-top: 1rem">Loading inspection requests…</p>
+                </div>
+              </div>
+            </div>
+            <div class="table-footer">
+              <span
+                ><span class="gold-dot"></span
+                ><span id="ins-footerCount">—</span></span
+              >
+              <span id="ins-footerTime"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ CONSULTATION PANEL ═══ -->
+        <div class="tab-panel" id="panel-consultation">
+          <div class="stats-row">
+            <div class="stat-card sc-all">
+              <span class="stat-icon">&#127808;</span>
+              <div class="stat-num" id="con-cAll">—</div>
+              <div class="stat-label">Total Requests</div>
+            </div>
+            <div class="stat-card sc-pending">
+              <span class="stat-icon">&#9203;</span>
+              <div class="stat-num" id="con-cPend">—</div>
+              <div class="stat-label">Awaiting Review</div>
+            </div>
+            <div class="stat-card sc-approved">
+              <span class="stat-icon">&#10004;</span>
+              <div class="stat-num" id="con-cAppr">—</div>
+              <div class="stat-label">Approved</div>
+            </div>
+            <div class="stat-card sc-rejected">
+              <span class="stat-icon">&#10060;</span>
+              <div class="stat-num" id="con-cRej">—</div>
+              <div class="stat-label">Rejected</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-toolbar">
+              <div class="filter-tabs">
+                <button
+                  class="filter-tab active"
+                  data-f="all"
+                  onclick="setFilter('consultation', 'all')"
+                >
+                  All
+                </button>
+                <button
+                  class="filter-tab"
+                  data-f="pending"
+                  onclick="setFilter('consultation', 'pending')"
+                >
+                  Pending
+                </button>
+                <button
+                  class="filter-tab"
+                  data-f="approved"
+                  onclick="setFilter('consultation', 'approved')"
+                >
+                  Approved
+                </button>
+                <button
+                  class="filter-tab"
+                  data-f="rejected"
+                  onclick="setFilter('consultation', 'rejected')"
+                >
+                  Rejected
+                </button>
+              </div>
+              <div class="toolbar-search">
+                <span class="si">&#128269;</span>
+                <input
+                  id="con-search"
+                  type="text"
+                  placeholder="Search name, email, phone…"
+                  oninput="setSearch('consultation', this.value)"
+                />
+              </div>
+            </div>
+            <div class="table-overflow">
+              <div id="con-tableContainer">
+                <div class="empty-state">
+                  <div class="loader"></div>
+                  <p style="margin-top: 1rem">Loading consultations…</p>
+                </div>
+              </div>
+            </div>
+            <div class="table-footer">
+              <span
+                ><span class="gold-dot"></span
+                ><span id="con-footerCount">—</span></span
+              >
+              <span id="con-footerTime"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /main -->
+
+    <script>
+      const APIS = {
+        inspection: "http://localhost:8000/inspection",
+        consultation: "http://localhost:8000/consultation",
+      };
+
+      const state = {
+        inspection: { data: [], filter: "all", search: "", updatingId: null },
+        consultation: { data: [], filter: "all", search: "", updatingId: null },
+      };
+
+      let activeTab = "inspection";
+
+      // ── helpers ──
+      const AC = [
+        "#1a2e1a",
+        "#2d4a2d",
+        "#3d5c3d",
+        "#533483",
+        "#2b2d42",
+        "#8b6914",
+        "#5c3d2e",
+      ];
+      const avatarColor = (n) =>
+        AC[(n || "").charCodeAt(0) % AC.length] || AC[0];
+      const esc = (s) =>
+        String(s || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      const cap = (s) => (s || "").charAt(0).toUpperCase() + (s || "").slice(1);
+      const fmtDate = (iso) => {
+        const d = new Date(iso);
+        return (
+          d.toLocaleDateString("en-NG", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          }) +
+          " · " +
+          d.toLocaleTimeString("en-NG", { hour: "2-digit", minute: "2-digit" })
+        );
+      };
+
+      function toast(msg) {
+        const c = document.getElementById("toastContainer");
+        const t = document.createElement("div");
+        t.className = "toast";
+        t.textContent = msg;
+        c.appendChild(t);
+        setTimeout(() => t.remove(), 3100);
+      }
+
+      function typeBadge(t) {
+        const map = {
+          "plantation-ownership": "plantation",
+          "land-plots": "land",
+          "commercial-property": "commercial",
+          "residential-property": "residential",
+        };
+        const cls = map[t] || "";
+        const label = (t || "—")
+          .replace(/-/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase());
+        return `<span class="type-badge ${cls}">${esc(label)}</span>`;
+      }
+
+      function getFiltered(sec) {
+        const s = state[sec];
+        return s.data.filter((r) => {
+          const ms = s.filter === "all" || r.status === s.filter;
+          const q = s.search.toLowerCase();
+          const name = r.name || r.fullName || "";
+          const mq =
+            !q ||
+            name.toLowerCase().includes(q) ||
+            (r.email || "").toLowerCase().includes(q) ||
+            (r.phone || "").includes(q);
+          return ms && mq;
+        });
+      }
+
+      function updateCounts(sec) {
+        const d = state[sec].data;
+        const p = sec === "inspection" ? "ins" : "con";
+        document.getElementById(p + "-cAll").textContent = d.length;
+        document.getElementById(p + "-cPend").textContent = d.filter(
+          (r) => r.status === "pending",
+        ).length;
+        document.getElementById(p + "-cAppr").textContent = d.filter(
+          (r) => r.status === "approved",
+        ).length;
+        document.getElementById(p + "-cRej").textContent = d.filter(
+          (r) => r.status === "rejected",
+        ).length;
+        // tab badges
+        document.getElementById("tabCountIns").textContent =
+          state.inspection.data.length;
+        document.getElementById("tabCountCons").textContent =
+          state.consultation.data.length;
+        document.getElementById("sideInsBadge").textContent =
+          state.inspection.data.filter((r) => r.status === "pending").length ||
+          "";
+        document.getElementById("sideConsBadge").textContent =
+          state.consultation.data.filter((r) => r.status === "pending")
+            .length || "";
+      }
+
+      function renderInspection() {
+        const rows = getFiltered("inspection");
+        updateCounts("inspection");
+        const el = document.getElementById("ins-tableContainer");
+        document.getElementById("ins-footerCount").textContent =
+          rows.length + " result" + (rows.length !== 1 ? "s" : "");
+        document.getElementById("ins-footerTime").textContent =
+          "Fetched: " + new Date().toLocaleTimeString("en-NG");
+        if (!rows.length) {
+          el.innerHTML = `<div class="empty-state"><div class="empty-icon">&#128203;</div><p>No inspection requests match your filter.</p></div>`;
+          return;
+        }
+        let h = `<table><thead><tr><th>Requester</th><th>Contact</th><th>Source</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
+        rows.forEach((r) => {
+          const name = r.name || "—",
+            init = name.slice(0, 2).toUpperCase(),
+            col = avatarColor(name);
+          const isUpd = state.inspection.updatingId === r._id;
+          h += `<tr>
+            <td><div class="person-cell"><div class="avatar" style="background:${col}">${esc(init)}</div>
+              <div><div class="person-name">${esc(name)}</div><div class="person-id">#${esc((r._id || "").slice(-6))}</div></div></div></td>
+            <td><div style="font-size:0.825rem;color:var(--text-dark);font-weight:500">${esc(r.email || "—")}</div>
+                <div style="font-size:0.75rem;color:var(--text-light);margin-top:0.15rem">${esc(r.phone || "—")}</div></td>
+            <td><span class="type-badge">${esc(r.source || "—")}</span></td>
+            <td style="font-size:0.775rem;white-space:nowrap">${fmtDate(r.createdAt)}</td>
+            <td><span class="pill ${r.status || "pending"}"><span class="pill-dot"></span>${cap(r.status || "pending")}</span></td>
+            <td><div class="actions-cell">${
+              isUpd
+                ? `<span class="loader"></span>`
+                : r.status === "pending"
+                  ? `<button class="btn-approve" onclick="setStatus('inspection','${r._id}','approved')">✓ Approve</button>
+                <button class="btn-reject"  onclick="setStatus('inspection','${r._id}','rejected')">✕ Reject</button>`
+                  : `<button class="btn-reset"   onclick="setStatus('inspection','${r._id}','pending')">↩ Reset</button>`
+            }</div></td></tr>`;
+        });
+        el.innerHTML = h + `</tbody></table>`;
+      }
+
+      function renderConsultation() {
+        const rows = getFiltered("consultation");
+        updateCounts("consultation");
+        const el = document.getElementById("con-tableContainer");
+        document.getElementById("con-footerCount").textContent =
+          rows.length + " result" + (rows.length !== 1 ? "s" : "");
+        document.getElementById("con-footerTime").textContent =
+          "Fetched: " + new Date().toLocaleTimeString("en-NG");
+        if (!rows.length) {
+          el.innerHTML = `<div class="empty-state"><div class="empty-icon">&#127808;</div><p>No consultations match your filter.</p></div>`;
+          return;
+        }
+        let h = `<table><thead><tr><th>Requester</th><th>Contact</th><th>Property Interest</th><th>Pref. Date</th><th>Message</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
+        rows.forEach((r) => {
+          const name = r.fullName || r.name || "—",
+            init = name.slice(0, 2).toUpperCase(),
+            col = avatarColor(name);
+          const isUpd = state.consultation.updatingId === r._id;
+          const msg =
+            (r.message || "").length > 32
+              ? esc(r.message.slice(0, 32)) + "…"
+              : esc(r.message || "—");
+          h += `<tr>
+            <td><div class="person-cell"><div class="avatar" style="background:${col}">${esc(init)}</div>
+              <div><div class="person-name">${esc(name)}</div><div class="person-id">#${esc((r._id || "").slice(-6))}</div></div></div></td>
+            <td><div style="font-size:0.825rem;color:var(--text-dark);font-weight:500">${esc(r.email || "—")}</div>
+                <div style="font-size:0.75rem;color:var(--text-light);margin-top:0.15rem">${esc(r.phone || "—")}</div></td>
+            <td>${typeBadge(r.propertyType)}<div style="font-size:0.7rem;color:var(--text-light);margin-top:0.2rem;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.propertyInterest || "")}">${esc(r.propertyInterest || "—")}</div></td>
+            <td style="font-size:0.775rem;white-space:nowrap">${r.preferredDate ? fmtDate(r.preferredDate) : "—"}</td>
+            <td style="font-size:0.775rem;color:var(--text-light);max-width:130px" title="${esc(r.message || "")}">${msg}</td>
+            <td><span class="pill ${r.status || "pending"}"><span class="pill-dot"></span>${cap(r.status || "pending")}</span></td>
+            <td><div class="actions-cell">${
+              isUpd
+                ? `<span class="loader"></span>`
+                : r.status === "pending"
+                  ? `<button class="btn-approve" onclick="setStatus('consultation','${r._id}','approved')">✓ Approve</button>
+                <button class="btn-reject"  onclick="setStatus('consultation','${r._id}','rejected')">✕ Reject</button>`
+                  : `<button class="btn-reset"   onclick="setStatus('consultation','${r._id}','pending')">↩ Reset</button>`
+            }</div></td></tr>`;
+        });
+        el.innerHTML = h + `</tbody></table>`;
+      }
+
+      function render(sec) {
+        if (sec === "inspection") renderInspection();
+        else renderConsultation();
+      }
+
+      function switchTab(tab) {
+        activeTab = tab;
+        ["inspection", "consultation"].forEach((t) => {
+          document
+            .getElementById("tab-" + t)
+            .classList.toggle("active", t === tab);
+          document
+            .getElementById("panel-" + t)
+            .classList.toggle("active", t === tab);
+          document
+            .getElementById("sideNav-" + t)
+            .classList.toggle("active", t === tab);
+        });
+        const meta = {
+          inspection: {
+            title: "Inspection Requests",
+            sub: "Manage and review all site inspection bookings",
+          },
+          consultation: {
+            title: "Consultations",
+            sub: "Manage webinar signups and consultation requests",
+          },
+        };
+        document.getElementById("topbarTitle").textContent = meta[tab].title;
+        document.getElementById("topbarSub").textContent = meta[tab].sub;
+        document.getElementById("topSearch").value = state[tab].search;
+        render(tab);
+      }
+
+      function setFilter(sec, f) {
+        state[sec].filter = f;
+        const p = sec === "inspection" ? "ins" : "con";
+        document
+          .querySelectorAll(`#panel-${sec} .filter-tab`)
+          .forEach((b) => b.classList.toggle("active", b.dataset.f === f));
+        render(sec);
+      }
+
+      function setSearch(sec, v) {
+        state[sec].search = v;
+        if (sec === activeTab) document.getElementById("topSearch").value = v;
+        render(sec);
+      }
+      function syncSearch(v) {
+        state[activeTab].search = v;
+        document.getElementById(
+          activeTab === "inspection" ? "ins-search" : "con-search",
+        ).value = v;
+        render(activeTab);
+      }
+
+      async function setStatus(sec, id, newStatus) {
+        state[sec].updatingId = id;
+        render(sec);
+        await new Promise((r) => setTimeout(r, 500));
+        state[sec].data = state[sec].data.map((r) =>
+          r._id === id ? { ...r, status: newStatus } : r,
+        );
+        state[sec].updatingId = null;
+        render(sec);
+        toast(
+          newStatus === "approved"
+            ? "✓ Request approved."
+            : newStatus === "rejected"
+              ? "✕ Request rejected."
+              : "↩ Reset to pending.",
+        );
+      }
+
+      // ── MOCK DATA ──
+      const MOCK = {
+        inspection: [
+          {
+            _id: "69af216f8b16ff4e2dcfc2de",
+            name: "skjdk",
+            email: "tayo@mail.com",
+            phone: "08056148116",
+            source: "skdjsdk",
+            status: "pending",
+            createdAt: "2026-03-09T19:37:19.461Z",
+          },
+          {
+            _id: "69af21318b16ff4e2dcfc2d9",
+            name: "aka",
+            email: "kaka@mail.com",
+            phone: "08056148116",
+            source: "this",
+            status: "pending",
+            createdAt: "2026-03-09T19:36:17.463Z",
+          },
+          {
+            _id: "69a71140519f4f1e699131e8",
+            name: "dfkfjdfkj",
+            email: "aa@mail.com",
+            phone: "08056148116",
+            source: "skdjd",
+            status: "pending",
+            createdAt: "2026-03-03T16:50:08.136Z",
+          },
+          {
+            _id: "69a71098519f4f1e699131e6",
+            name: "sdkdjskj",
+            email: "as@mail.com",
+            phone: "239283928398",
+            source: "wddjs",
+            status: "pending",
+            createdAt: "2026-03-03T16:47:20.182Z",
+          },
+        ],
+        consultation: [
+          {
+            _id: "69a71476519f4f1e699131ea",
+            fullName: "Samuel Ndukwe",
+            email: "eduxleduxl@gmail.com",
+            phone: "08124782753",
+            propertyInterest: "palmrich",
+            propertyType: "plantation-ownership",
+            preferredDate: "2026-03-03T17:03:48.128Z",
+            message: "ksjd",
+            status: "pending",
+            createdAt: "2026-03-03T17:03:50.073Z",
+          },
+          {
+            _id: "69a70841cd0a38bd4c6c5f13",
+            fullName: "myskjdsjk",
+            email: "ndukwe@mail.com",
+            phone: "08056148116",
+            propertyInterest: "palmrich",
+            propertyType: "plantation-ownership",
+            preferredDate: "2026-03-03T16:11:41.047Z",
+            message: "dskdjdk",
+            status: "pending",
+            createdAt: "2026-03-03T16:11:45.817Z",
+          },
+          {
+            _id: "6995e8cf834f55d7f34efeb0",
+            fullName: "Reen",
+            email: "amarachukwuireneoffor@gmail.com",
+            phone: "+2348137223240",
+            propertyInterest: "Land & Plots",
+            propertyType: "land-plots",
+            preferredDate: "2026-02-20T00:00:00.000Z",
+            message: "Passive income",
+            status: "pending",
+            createdAt: "2026-02-18T16:29:03.680Z",
+          },
+          {
+            _id: "6995a5631d9ef624df9c794b",
+            fullName: "Happiness Friday Warribo",
+            email: "fridayhappinesswarribo@gmail.com",
+            phone: "+2348150293419",
+            propertyInterest: "Palm Plantation Ownership",
+            propertyType: "plantation-ownership",
+            preferredDate: "2026-02-20T00:00:00.000Z",
+            message: "Create generational wealth",
+            status: "pending",
+            createdAt: "2026-02-18T11:41:23.377Z",
+          },
+          {
+            _id: "698c91aaea502a1538f1f59c",
+            fullName: "Chukwuemeka Okonkwo",
+            email: "chukwu@email.com",
+            phone: "+234 803 123 4567",
+            propertyInterest: "Luxury Villa - Eko Atlantic",
+            propertyType: "residential-property",
+            preferredDate: "2025-02-15T00:00:00.000Z",
+            message: "Interested in the villa...",
+            status: "pending",
+            createdAt: "2026-02-11T14:26:50.941Z",
+          },
+          {
+            _id: "698c9d7bea502a1538f1f59f",
+            fullName: "Samuel",
+            email: "ndukwesamuel23@gmail.com",
+            phone: "+2349167703400",
+            propertyInterest: "Commercial Properties",
+            propertyType: "commercial-property",
+            preferredDate: "2026-02-11T00:00:00.000Z",
+            message: "ddddk",
+            status: "pending",
+            createdAt: "2026-02-11T15:17:15.505Z",
+          },
+          {
+            _id: "6999b9ac94a5d317db1a938b",
+            fullName: "Samuel Ndukwe",
+            email: "eduxleduxl@gmail.com",
+            phone: "+2348124782753",
+            propertyInterest: "Palm Plantation Ownership",
+            propertyType: "plantation-ownership",
+            preferredDate: "2026-02-23T00:00:00.000Z",
+            message: "hjkjkjkjkjkjkj",
+            status: "pending",
+            createdAt: "2026-02-21T13:57:00.846Z",
+          },
+        ],
+      };
+
+      async function fetchSection(sec) {
+        try {
+          const res = await fetch(APIS[sec]);
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const json = await res.json();
+          state[sec].data =
+            sec === "inspection"
+              ? json.data || []
+              : json.data?.consultations || json.data || [];
+        } catch {
+          state[sec].data = MOCK[sec];
+        }
+        render(sec);
+      }
+
+      // responsive menu toggle visibility
+      if (window.innerWidth <= 900)
+        document.getElementById("menuToggle").style.display = "flex";
+      window.addEventListener("resize", () => {
+        document.getElementById("menuToggle").style.display =
+          window.innerWidth <= 900 ? "flex" : "none";
+      });
+
+      fetchSection("inspection");
+      fetchSection("consultation");
+    </script>
+  </body>
+</html>

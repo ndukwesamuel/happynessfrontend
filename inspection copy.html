@@ -1,0 +1,1095 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YARA Group — Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --cream: #f5f0e8;
+        --cream-dark: #ede6d6;
+        --forest: #1a2e1a;
+        --forest-mid: #2d4a2d;
+        --forest-light: #3d5c3d;
+        --gold: #c49a3c;
+        --gold-light: #e0b84a;
+        --text-dark: #1a1a1a;
+        --text-mid: #4a4a4a;
+        --text-light: #7a7a7a;
+        --sidebar-w: 260px;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--cream);
+        color: var(--text-dark);
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: var(--forest);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 50;
+        transition: transform 0.3s ease;
+      }
+      .sidebar-logo {
+        padding: 2rem 1.75rem 1.5rem;
+        border-bottom: 1px solid rgba(245, 240, 232, 0.08);
+      }
+      .sidebar-logo a {
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--cream);
+        text-decoration: none;
+      }
+      .sidebar-logo a span {
+        color: var(--gold-light);
+      }
+      .sidebar-logo p {
+        font-size: 0.7rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: rgba(245, 240, 232, 0.35);
+        margin-top: 0.25rem;
+      }
+      .sidebar-nav {
+        padding: 1.5rem 0;
+        flex: 1;
+      }
+      .nav-label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(245, 240, 232, 0.3);
+        padding: 0 1.75rem;
+        margin-bottom: 0.5rem;
+        margin-top: 1.25rem;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.7rem 1.75rem;
+        color: rgba(245, 240, 232, 0.6);
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        border-left: 3px solid transparent;
+        transition: all 0.2s;
+        background: none;
+        border-top: none;
+        border-right: none;
+        border-bottom: none;
+        width: 100%;
+        text-align: left;
+      }
+      .nav-item:hover {
+        color: var(--cream);
+        background: rgba(255, 255, 255, 0.04);
+        border-left-color: rgba(196, 154, 60, 0.4);
+      }
+      .nav-item.active {
+        color: var(--gold-light);
+        background: rgba(196, 154, 60, 0.08);
+        border-left-color: var(--gold-light);
+      }
+      .nav-item .icon {
+        font-size: 1rem;
+        width: 1.25rem;
+        text-align: center;
+      }
+      .sidebar-footer {
+        padding: 1.25rem 1.75rem;
+        border-top: 1px solid rgba(245, 240, 232, 0.08);
+        font-size: 0.75rem;
+        color: rgba(245, 240, 232, 0.3);
+      }
+
+      /* ── MAIN ── */
+      .main {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ── TOPBAR ── */
+      .topbar {
+        background: rgba(245, 240, 232, 0.97);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(196, 154, 60, 0.15);
+        padding: 1rem 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 40;
+      }
+      .topbar-left h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--forest);
+      }
+      .topbar-left p {
+        font-size: 0.75rem;
+        color: var(--text-light);
+        margin-top: 0.1rem;
+        letter-spacing: 0.02em;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .search-wrap {
+        position: relative;
+      }
+      .search-wrap input {
+        background: white;
+        border: 1px solid rgba(196, 154, 60, 0.2);
+        padding: 0.55rem 1rem 0.55rem 2.25rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.8rem;
+        color: var(--text-dark);
+        width: 220px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .search-wrap input:focus {
+        border-color: var(--gold);
+      }
+      .search-wrap .search-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-light);
+        font-size: 0.8rem;
+      }
+      .badge-admin {
+        background: var(--forest);
+        color: var(--gold-light);
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 0.4rem 0.9rem;
+      }
+
+      /* ── PAGE CONTENT ── */
+      .page-content {
+        padding: 2.5rem;
+        flex: 1;
+      }
+
+      /* ── STAT CARDS ── */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.25rem;
+        margin-bottom: 2.5rem;
+      }
+      .stat-card {
+        background: white;
+        border-top: 3px solid transparent;
+        padding: 1.5rem 1.75rem;
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s;
+      }
+      .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.09);
+      }
+      .stat-card::after {
+        content: "";
+        position: absolute;
+        bottom: -20px;
+        right: -20px;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        opacity: 0.05;
+      }
+      .stat-card.all {
+        border-top-color: var(--forest);
+      }
+      .stat-card.all::after {
+        background: var(--forest);
+      }
+      .stat-card.pending {
+        border-top-color: #d97706;
+      }
+      .stat-card.pending::after {
+        background: #d97706;
+      }
+      .stat-card.approved {
+        border-top-color: #059669;
+      }
+      .stat-card.approved::after {
+        background: #059669;
+      }
+      .stat-card.rejected {
+        border-top-color: #dc2626;
+      }
+      .stat-card.rejected::after {
+        background: #dc2626;
+      }
+
+      .stat-num {
+        font-family: "Playfair Display", serif;
+        font-size: 2.5rem;
+        font-weight: 900;
+        line-height: 1;
+        margin-bottom: 0.35rem;
+      }
+      .stat-card.all .stat-num {
+        color: var(--forest);
+      }
+      .stat-card.pending .stat-num {
+        color: #d97706;
+      }
+      .stat-card.approved .stat-num {
+        color: #059669;
+      }
+      .stat-card.rejected .stat-num {
+        color: #dc2626;
+      }
+
+      .stat-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-light);
+      }
+      .stat-icon {
+        position: absolute;
+        top: 1.25rem;
+        right: 1.5rem;
+        font-size: 1.5rem;
+        opacity: 0.18;
+      }
+
+      /* ── TOOLBAR ── */
+      .table-toolbar {
+        background: white;
+        border-bottom: 1px solid #f0ece4;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .filter-tabs {
+        display: flex;
+        gap: 0.25rem;
+      }
+      .filter-tab {
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 0.45rem 1rem;
+        border: 1px solid transparent;
+        background: none;
+        cursor: pointer;
+        color: var(--text-light);
+        transition: all 0.18s;
+      }
+      .filter-tab:hover {
+        color: var(--text-dark);
+        background: var(--cream);
+      }
+      .filter-tab.active {
+        background: var(--forest);
+        color: var(--gold-light);
+      }
+
+      .toolbar-search {
+        position: relative;
+      }
+      .toolbar-search input {
+        background: var(--cream);
+        border: 1px solid rgba(196, 154, 60, 0.15);
+        padding: 0.5rem 1rem 0.5rem 2rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.8rem;
+        color: var(--text-dark);
+        width: 240px;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .toolbar-search input:focus {
+        border-color: var(--gold);
+        background: white;
+      }
+      .toolbar-search .si {
+        position: absolute;
+        left: 0.65rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.8rem;
+        color: var(--text-light);
+      }
+
+      /* ── TABLE ── */
+      .table-wrap {
+        background: white;
+        border: 1px solid #ece8e0;
+        overflow: hidden;
+        margin-bottom: 2rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      thead tr {
+        background: var(--cream);
+        border-bottom: 1px solid #ece8e0;
+      }
+      th {
+        padding: 0.8rem 1.25rem;
+        text-align: left;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-light);
+      }
+      tbody tr {
+        border-bottom: 1px solid #f5f0e8;
+        transition: background 0.15s;
+      }
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      tbody tr:hover {
+        background: #faf8f3;
+      }
+      td {
+        padding: 1rem 1.25rem;
+        font-size: 0.85rem;
+        color: var(--text-mid);
+        vertical-align: middle;
+      }
+
+      /* avatar */
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Playfair Display", serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--cream);
+        flex-shrink: 0;
+      }
+      .person-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .person-name {
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: var(--text-dark);
+      }
+      .person-id {
+        font-size: 0.7rem;
+        color: var(--text-light);
+        margin-top: 0.1rem;
+      }
+
+      /* status pill */
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 0.3rem 0.75rem;
+      }
+      .pill-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .pill.pending {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .pill.pending .pill-dot {
+        background: #d97706;
+      }
+      .pill.approved {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .pill.approved .pill-dot {
+        background: #059669;
+      }
+      .pill.rejected {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .pill.rejected .pill-dot {
+        background: #dc2626;
+      }
+
+      /* source badge */
+      .source-badge {
+        background: var(--cream-dark);
+        color: var(--text-mid);
+        font-size: 0.7rem;
+        font-weight: 500;
+        padding: 0.25rem 0.65rem;
+        display: inline-block;
+      }
+
+      /* action buttons */
+      .btn-approve,
+      .btn-reject,
+      .btn-reset {
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 0.4rem 0.9rem;
+        border: none;
+        cursor: pointer;
+        transition:
+          opacity 0.15s,
+          transform 0.1s;
+      }
+      .btn-approve:hover,
+      .btn-reject:hover,
+      .btn-reset:hover {
+        opacity: 0.8;
+        transform: translateY(-1px);
+      }
+      .btn-approve:disabled,
+      .btn-reject:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-approve {
+        background: var(--forest);
+        color: var(--gold-light);
+      }
+      .btn-reject {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .btn-reset {
+        background: var(--cream-dark);
+        color: var(--text-mid);
+      }
+
+      .actions-cell {
+        display: flex;
+        gap: 0.4rem;
+        align-items: center;
+      }
+
+      /* empty & loading */
+      .empty-state {
+        padding: 4rem 2rem;
+        text-align: center;
+        color: var(--text-light);
+      }
+      .empty-state .empty-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.4;
+      }
+      .empty-state p {
+        font-size: 0.875rem;
+      }
+
+      /* loader */
+      .loader {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(196, 154, 60, 0.2);
+        border-top-color: var(--gold);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        vertical-align: middle;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* table footer */
+      .table-footer {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.75rem;
+        color: var(--text-light);
+        background: var(--cream);
+        border-top: 1px solid #ece8e0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .gold-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background: var(--gold);
+        border-radius: 50%;
+        margin-right: 0.4rem;
+        vertical-align: middle;
+      }
+
+      /* toast */
+      .toast-container {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 300;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .toast {
+        background: var(--forest);
+        color: var(--cream);
+        padding: 0.75rem 1.25rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border-left: 3px solid var(--gold);
+        animation:
+          slideIn 0.3s ease,
+          fadeOut 0.3s ease 2.5s forwards;
+        max-width: 300px;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(40px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes fadeOut {
+        to {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+      }
+
+      /* responsive */
+      @media (max-width: 900px) {
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+        }
+        .menu-toggle {
+          display: flex !important;
+        }
+        .search-wrap {
+          display: none;
+        }
+      }
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        flex-direction: column;
+        gap: 4px;
+        padding: 4px;
+      }
+      .menu-toggle span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: var(--forest);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- TOAST -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <a href="#"><span>YARA</span> Group</a>
+        <p>Admin Portal</p>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main</div>
+        <a class="nav-item" href="#">
+          <span class="icon">&#9781;</span> Overview
+        </a>
+        <button class="nav-item active">
+          <span class="icon">&#128203;</span> Inspection Requests
+        </button>
+        <button class="nav-item">
+          <span class="icon">&#127808;</span> Webinar Signups
+        </button>
+        <div class="nav-label">Estates</div>
+        <button class="nav-item">
+          <span class="icon">&#127968;</span> Palmrich Phases
+        </button>
+        <button class="nav-item">
+          <span class="icon">&#128176;</span> Transactions
+        </button>
+        <div class="nav-label">Settings</div>
+        <button class="nav-item">
+          <span class="icon">&#9881;&#65039;</span> Configuration
+        </button>
+        <button class="nav-item">
+          <span class="icon">&#128274;</span> Logout
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        &copy; 2025 YARA Group &mdash; Admin v1.0
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 1rem">
+          <button
+            class="menu-toggle"
+            id="menuToggle"
+            onclick="
+              document.getElementById('sidebar').classList.toggle('open')
+            "
+          >
+            <span></span><span></span><span></span>
+          </button>
+          <div class="topbar-left">
+            <h1>Inspection Requests</h1>
+            <p>Manage and review all site inspection bookings</p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="search-wrap">
+            <span class="search-icon">&#128269;</span>
+            <input
+              type="text"
+              placeholder="Quick search..."
+              id="topSearch"
+              oninput="syncSearch(this.value)"
+            />
+          </div>
+          <div class="badge-admin">Admin</div>
+        </div>
+      </header>
+
+      <!-- PAGE BODY -->
+      <div class="page-content">
+        <!-- STATS -->
+        <div class="stats-row" id="statsRow">
+          <div class="stat-card all">
+            <span class="stat-icon">&#128203;</span>
+            <div class="stat-num" id="cntAll">—</div>
+            <div class="stat-label">Total Requests</div>
+          </div>
+          <div class="stat-card pending">
+            <span class="stat-icon">&#9203;</span>
+            <div class="stat-num" id="cntPending">—</div>
+            <div class="stat-label">Awaiting Review</div>
+          </div>
+          <div class="stat-card approved">
+            <span class="stat-icon">&#10004;&#65039;</span>
+            <div class="stat-num" id="cntApproved">—</div>
+            <div class="stat-label">Approved</div>
+          </div>
+          <div class="stat-card rejected">
+            <span class="stat-icon">&#10060;</span>
+            <div class="stat-num" id="cntRejected">—</div>
+            <div class="stat-label">Rejected</div>
+          </div>
+        </div>
+
+        <!-- TABLE CARD -->
+        <div class="table-wrap">
+          <div class="table-toolbar">
+            <div class="filter-tabs" id="filterTabs">
+              <button
+                class="filter-tab active"
+                data-filter="all"
+                onclick="setFilter('all')"
+              >
+                All
+              </button>
+              <button
+                class="filter-tab"
+                data-filter="pending"
+                onclick="setFilter('pending')"
+              >
+                Pending
+              </button>
+              <button
+                class="filter-tab"
+                data-filter="approved"
+                onclick="setFilter('approved')"
+              >
+                Approved
+              </button>
+              <button
+                class="filter-tab"
+                data-filter="rejected"
+                onclick="setFilter('rejected')"
+              >
+                Rejected
+              </button>
+            </div>
+            <div class="toolbar-search">
+              <span class="si">&#128269;</span>
+              <input
+                type="text"
+                placeholder="Search name, email, phone…"
+                id="tableSearch"
+                oninput="setSearch(this.value)"
+              />
+            </div>
+          </div>
+
+          <div id="tableContainer">
+            <div class="empty-state">
+              <div class="loader"></div>
+              <p style="margin-top: 1rem">Loading inspection requests…</p>
+            </div>
+          </div>
+
+          <div class="table-footer">
+            <span
+              ><span class="gold-dot"></span>
+              <span id="footerCount">0 results</span></span
+            >
+            <span id="footerUpdated"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ── CONFIG ──
+      //   const API = "http://localhost:8000/inspection";
+      const API = "https://happynessbackend.onrender.com/inspection";
+
+      // ── STATE ──
+      let allData = [];
+      let filter = "all";
+      let search = "";
+      let updatingId = null;
+
+      // ── AVATAR COLOURS ──
+      const avatarColors = [
+        "#1a2e1a",
+        "#2d4a2d",
+        "#3d5c3d",
+        "#533483",
+        "#2b2d42",
+        "#8b6914",
+        "#5c3d2e",
+      ];
+      function avatarColor(name) {
+        return (
+          avatarColors[(name || "").charCodeAt(0) % avatarColors.length] ||
+          avatarColors[0]
+        );
+      }
+
+      // ── FORMAT DATE ──
+      function fmtDate(iso) {
+        const d = new Date(iso);
+        return (
+          d.toLocaleDateString("en-NG", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          }) +
+          " · " +
+          d.toLocaleTimeString("en-NG", { hour: "2-digit", minute: "2-digit" })
+        );
+      }
+
+      // ── TOAST ──
+      function showToast(msg) {
+        const c = document.getElementById("toastContainer");
+        const t = document.createElement("div");
+        t.className = "toast";
+        t.textContent = msg;
+        c.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+      }
+
+      // ── COUNTS ──
+      function updateCounts() {
+        document.getElementById("cntAll").textContent = allData.length;
+        document.getElementById("cntPending").textContent = allData.filter(
+          (r) => r.status === "pending",
+        ).length;
+        document.getElementById("cntApproved").textContent = allData.filter(
+          (r) => r.status === "approved",
+        ).length;
+        document.getElementById("cntRejected").textContent = allData.filter(
+          (r) => r.status === "rejected",
+        ).length;
+      }
+
+      // ── FILTER + SEARCH ──
+      function filtered() {
+        return allData.filter((r) => {
+          const ms = filter === "all" || r.status === filter;
+          const q = search.toLowerCase();
+          const mq =
+            !q ||
+            r.name?.toLowerCase().includes(q) ||
+            r.email?.toLowerCase().includes(q) ||
+            r.phone?.includes(q);
+          return ms && mq;
+        });
+      }
+
+      function setFilter(f) {
+        filter = f;
+        document.querySelectorAll(".filter-tab").forEach((b) => {
+          b.classList.toggle("active", b.dataset.filter === f);
+        });
+        render();
+      }
+
+      function setSearch(v) {
+        search = v;
+        document.getElementById("topSearch").value = v;
+        render();
+      }
+      function syncSearch(v) {
+        search = v;
+        document.getElementById("tableSearch").value = v;
+        render();
+      }
+
+      // ── RENDER TABLE ──
+      function render() {
+        const rows = filtered();
+        updateCounts();
+
+        const container = document.getElementById("tableContainer");
+        document.getElementById("footerCount").textContent =
+          rows.length + " result" + (rows.length !== 1 ? "s" : "");
+        document.getElementById("footerUpdated").textContent =
+          "Last fetched: " + new Date().toLocaleTimeString("en-NG");
+
+        if (!rows.length) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">&#128203;</div>
+              <p>No inspection requests match your current filter.</p>
+            </div>`;
+          return;
+        }
+
+        let html = `
+          <table>
+            <thead>
+              <tr>
+                <th>Requester</th>
+                <th>Contact</th>
+                <th>Source</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>`;
+
+        rows.forEach((r) => {
+          const initials = (r.name || "XX").slice(0, 2).toUpperCase();
+          const color = avatarColor(r.name);
+          const isPending = r.status === "pending";
+          const isUpdating = updatingId === r._id;
+          const shortId = r._id?.slice(-6) || "------";
+
+          html += `
+            <tr>
+              <td>
+                <div class="person-cell">
+                  <div class="avatar" style="background:${color}">${initials}</div>
+                  <div>
+                    <div class="person-name">${escHtml(r.name || "—")}</div>
+                    <div class="person-id">#${shortId}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="font-size:0.825rem;color:var(--text-dark);font-weight:500">${escHtml(r.email || "—")}</div>
+                <div style="font-size:0.75rem;color:var(--text-light);margin-top:0.15rem">${escHtml(r.phone || "—")}</div>
+              </td>
+              <td><span class="source-badge">${escHtml(r.source || "—")}</span></td>
+              <td style="font-size:0.775rem;white-space:nowrap">${fmtDate(r.createdAt)}</td>
+              <td>
+                <span class="pill ${r.status || "pending"}">
+                  <span class="pill-dot"></span>
+                  ${capitalize(r.status || "pending")}
+                </span>
+              </td>
+              <td>
+                <div class="actions-cell">
+                  ${
+                    isUpdating
+                      ? `<span class="loader"></span>`
+                      : isPending
+                        ? `<button class="btn-approve" onclick="setStatus('${r._id}','approved')">✓ Approve</button>
+                         <button class="btn-reject"  onclick="setStatus('${r._id}','rejected')">✕ Reject</button>`
+                        : `<button class="btn-reset" onclick="setStatus('${r._id}','pending')">↩ Reset</button>`
+                  }
+                </div>
+              </td>
+            </tr>`;
+        });
+
+        html += `</tbody></table>`;
+        container.innerHTML = html;
+      }
+
+      // ── SET STATUS (local + optional API) ──
+      async function setStatus(id, newStatus) {
+        updatingId = id;
+        render();
+        // Simulate a short delay (replace with real PATCH call if you have one)
+        await new Promise((res) => setTimeout(res, 500));
+        allData = allData.map((r) =>
+          r._id === id ? { ...r, status: newStatus } : r,
+        );
+        updatingId = null;
+        render();
+        showToast(
+          `Request ${newStatus === "approved" ? "✓ approved" : newStatus === "rejected" ? "✕ rejected" : "↩ reset to pending"}.`,
+        );
+      }
+
+      // ── FETCH ──
+      async function fetchData() {
+        try {
+          const res = await fetch(API);
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const json = await res.json();
+          allData = json.data || [];
+        } catch {
+          // use mock data if server not running
+          allData = [
+            {
+              _id: "69af216f8b16ff4e2dcfc2de",
+              name: "skjdk",
+              email: "tayo@mail.com",
+              phone: "08056148116",
+              source: "skdjsdk",
+              status: "pending",
+              createdAt: "2026-03-09T19:37:19.461Z",
+            },
+            {
+              _id: "69af21318b16ff4e2dcfc2d9",
+              name: "aka",
+              email: "kaka@mail.com",
+              phone: "08056148116",
+              source: "this",
+              status: "pending",
+              createdAt: "2026-03-09T19:36:17.463Z",
+            },
+            {
+              _id: "69a71140519f4f1e699131e8",
+              name: "dfkfjdfkj",
+              email: "aa@mail.com",
+              phone: "08056148116",
+              source: "skdjd",
+              status: "pending",
+              createdAt: "2026-03-03T16:50:08.136Z",
+            },
+            {
+              _id: "69a71098519f4f1e699131e6",
+              name: "sdkdjskj",
+              email: "as@mail.com",
+              phone: "239283928398",
+              source: "wddjs",
+              status: "pending",
+              createdAt: "2026-03-03T16:47:20.182Z",
+            },
+          ];
+        }
+        render();
+      }
+
+      // ── HELPERS ──
+      function escHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+      function capitalize(s) {
+        return s.charAt(0).toUpperCase() + s.slice(1);
+      }
+
+      // ── INIT ──
+      fetchData();
+    </script>
+  </body>
+</html>
